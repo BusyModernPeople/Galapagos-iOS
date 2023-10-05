@@ -61,6 +61,7 @@ final class CertifyCodeView: BaseView {
         timerTextField.snp.makeConstraints {
             $0.top.equalTo(infoLabel.snp.bottom).offset(12)
             $0.leading.trailing.equalToSuperview()
+            $0.height.equalTo(68)
         }
     
         
