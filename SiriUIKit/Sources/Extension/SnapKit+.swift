@@ -28,11 +28,15 @@ extension ConstraintMakerEditable {
         
     }
     
-    
     @discardableResult
-    public func GalapagosOffset(offset : OffsetType, reverse: Bool = false) -> ConstraintMakerEditable {
-        reverse ? self.offset(-offset.rawValue) : self.offset(offset.rawValue)
+    public func GalapagosOffset(offset: OffsetType, reverse: Bool = false) -> ConstraintMakerEditable {
+        _ = reverse ? self.offset(-offset.rawValue) : self.offset(offset.rawValue)
+        return self
     }
     
-    
+    @discardableResult
+    public func GalapagosInset(inset: OffsetType) -> ConstraintMakerEditable {
+        self.inset(inset.rawValue)
+        return self
+    }
 }
