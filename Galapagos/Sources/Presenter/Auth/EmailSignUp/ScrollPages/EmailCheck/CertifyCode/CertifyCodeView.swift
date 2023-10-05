@@ -32,6 +32,15 @@ final class CertifyCodeView: BaseView {
         return textField
     }()
     
+    public lazy var reSendEmail: UIButton = {
+        let button = UIButton()
+        button.setTitle("인증코드 재전송", for: .normal)
+        button.titleLabel?.font = SiriUIKitFontFamily.Pretendard.medium.font(size: 14)
+        button.setTitleColor(GalapagosAsset.black제목DisplayHeadingBody.color, for: .normal)
+        return button
+    }()
+    
+    
     
     // MARK: - Properties
     
@@ -45,7 +54,8 @@ final class CertifyCodeView: BaseView {
         super.setAddSubView()
         addSubviews([
             infoLabel,
-            timerTextField
+            timerTextField,
+            reSendEmail
         ])
     
     }
@@ -59,11 +69,15 @@ final class CertifyCodeView: BaseView {
         }
         
         timerTextField.snp.makeConstraints {
-            $0.top.equalTo(infoLabel.snp.bottom).offset(12)
+            $0.top.equalTo(infoLabel.snp.bottom).GalapagosOffset(offset: ._12)
             $0.leading.trailing.equalToSuperview()
             $0.height.equalTo(68)
         }
     
+        reSendEmail.snp.makeConstraints {
+            $0.trailing.equalTo(timerTextField.snp.trailing)
+            $0.top.equalTo(timerTextField.snp.bottom).offset(6)
+        }
         
     }
     
@@ -73,6 +87,10 @@ final class CertifyCodeView: BaseView {
     
     override func bind() {
         super.bind()
+        
+        reSendEmail.rx.tap
+            .bind(to: timerTextField.resetTimerSubject)
+            .disposed(by: disposeBag)
     }
     // MARK: - Methods
 }
