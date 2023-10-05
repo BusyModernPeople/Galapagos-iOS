@@ -17,7 +17,7 @@ final class CertifyEmailView: BaseView {
     
     // MARK: - UI Components
     
-    private lazy var emailTextField: GalapagosTextField = {
+    public lazy var emailTextField: GalapagosTextField = {
         let textField = GalapagosTextField(
             placeHolder: "이메일을 입력해주세요",
             maxCount: 0,
@@ -26,7 +26,7 @@ final class CertifyEmailView: BaseView {
         return textField
     }()
     
-    private lazy var certifyEmailButton: GalapagosButton = {
+    public lazy var certifyEmailButton: GalapagosButton = {
         let button = GalapagosButton(
             isRound: false,
             iconTitle: nil,
@@ -38,10 +38,14 @@ final class CertifyEmailView: BaseView {
     
     // MARK: - Properties
     private let viewModel: CertifyEmailViewModel
+    private let parentViewModel: EmailCheckViewModel
     
     // MARK: - Initialize
-    init(viewModel: CertifyEmailViewModel) {
+    init(viewModel: CertifyEmailViewModel,
+         parentViewModel: EmailCheckViewModel) {
         self.viewModel = viewModel
+        self.parentViewModel = parentViewModel
+        
         super.init(frame: .zero)
     }
     
@@ -89,10 +93,12 @@ final class CertifyEmailView: BaseView {
         output.receivedMessage
             .debug()
             .observe(on: MainScheduler.instance)
-            .subscribe(onNext: { message in
-                self.certifyEmailButton.rxType.accept(.Usage(.Disabled))
-                self.emailTextField.rxType.accept(.disabled)
-                print("😀 인증코드 보내기 성공: \(message)😀")
+            .withUnretained(self)
+            .subscribe(onNext: { owner, message in
+                owner.certifyEmailButton.rxType.accept(.Usage(.Disabled))
+                owner.emailTextField.rxType.accept(.disabled)
+                
+                owner.parentViewModel.certifyCodeIsHidden.accept(false)
             }, onError: { error in
                 print("😀 인증코드 보내기 실패: \(error.localizedDescription)😀")
             })

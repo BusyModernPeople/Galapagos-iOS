@@ -32,8 +32,6 @@ final class NicknameCheckView: UIView {
             maxCount: 6,
             errorMessage: "잘못된 닉네임 입니다."
         )
-        textField.textField.font = GalapagosFontFamily.Pretendard.medium.font(size: 18)
-        textField.textField.textColor = GalapagosAsset.black제목DisplayHeadingBody.color
         return textField
     }()
     
@@ -109,15 +107,15 @@ final class NicknameCheckView: UIView {
     private func bind() {
         
         // TODO: 입력을 마치고 나서 확인을 누르면, 서버에서 닉네임 중복 확인. (usecase)
-        nickNameTextField.textField.rx.controlEvent(.editingDidEnd)
+        nickNameTextField.rx.controlEvent(.editingDidEnd)
             .withUnretained(self)
             .subscribe(onNext: { owner, _ in
-                guard let text = owner.nickNameTextField.textField.text else { return }
+                guard let text = owner.nickNameTextField.text else { return }
                 owner.checkPasswordLengthValidation(password: text)
             })
             .disposed(by: disposeBag)
         
-        nickNameTextField.textField.rx.controlEvent(.editingDidBegin)
+        nickNameTextField.rx.controlEvent(.editingDidBegin)
             .withUnretained(self)
             .subscribe(onNext: { owner, _ in
                 owner.checkPasswordLengthValidation(password: "")

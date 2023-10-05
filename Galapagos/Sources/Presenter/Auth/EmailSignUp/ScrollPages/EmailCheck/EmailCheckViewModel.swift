@@ -10,6 +10,7 @@ import Foundation
 import UIKit
 
 import RxSwift
+import RxRelay
 
 final class EmailCheckViewModel: ViewModelType {
     
@@ -22,6 +23,9 @@ final class EmailCheckViewModel: ViewModelType {
     }
     
     var disposeBag: DisposeBag = DisposeBag()
+    
+    var certifyCodeIsHidden = BehaviorRelay<Bool>(value: true)
+    
     
     func transform(input: Input) -> Output {
         

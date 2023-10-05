@@ -33,14 +33,21 @@ final class EmailCheckView: UIView {
                 usecase: DefaultCertifyCodeWithEmailUsecase(
                     authRepository: DefaultAuthRepository()
                 )
-            )
+            ),
+            parentViewModel: viewModel
         )
+        return view
+    }()
+    
+    private lazy var certifyCodeView: CertifyCodeView = {
+        let view = CertifyCodeView()
         return view
     }()
     
     // MARK: - Properties
     private var disposeBag = DisposeBag()
-    private var viewModel: EmailSignUpViewModel
+    private var parentViewModel: EmailSignUpViewModel
+    private var viewModel: EmailCheckViewModel
     
     /// 이메일 인증 API의 return을 담아낸다 (초기값 false)
     private let emailCertified: BehaviorRelay<Bool> = BehaviorRelay(value: false)
@@ -48,9 +55,10 @@ final class EmailCheckView: UIView {
     
     // MARK: - Initializers
     init(
-        frame: CGRect,
-        viewModel: EmailSignUpViewModel
+        parentViewModel: EmailSignUpViewModel,
+        viewModel: EmailCheckViewModel
     ) {
+        self.parentViewModel = parentViewModel
         self.viewModel = viewModel
         super.init(frame: .zero)
         
@@ -70,7 +78,8 @@ final class EmailCheckView: UIView {
     private func setAddSubView() {
         self.addSubviews([
             titleLabel,
-            certifyEmailView
+            certifyEmailView,
+            certifyCodeView
         ])
     }
     
@@ -85,10 +94,49 @@ final class EmailCheckView: UIView {
             $0.leading.trailing.equalToSuperview().inset(24)
             $0.height.equalTo(132)
         }
+        
+        certifyCodeView.snp.makeConstraints {
+            $0.top.equalTo(certifyEmailView.snp.bottom).offset(32)
+            $0.leading.trailing.equalToSuperview().inset(24)
+            $0.height.equalTo(132)
+        }
     }
     
     private func bind() {
-//        
+        
+        viewModel.certifyCodeIsHidden
+            .observe(on: MainScheduler.instance)
+            .withUnretained(self)
+            .subscribe(onNext: { owner, isHidden in
+                owner.certifyCodeView.isHidden = isHidden
+                if !isHidden {
+                    owner.certifyCodeView.timerTextField.rx.becomeFirstResponder.onNext(())
+                }
+            })
+            .disposed(by: disposeBag)
+        
+        
+        certifyCodeView.timerTextField.rx.controlEvent([.editingDidBegin])
+            .withUnretained(self)
+            .subscribe(onNext: { owner, _ in
+                UIView.animate(withDuration: 0.5) {
+                    owner.frame.origin.y -= owner.titleLabel.frame.height
+                    owner.layoutIfNeeded()
+                }
+            })
+            .disposed(by: disposeBag)
+        
+        
+        certifyCodeView.timerTextField.rx.controlEvent([.editingDidEnd])
+            .withUnretained(self)
+            .subscribe(onNext: { owner, _ in
+                UIView.animate(withDuration: 0.5) {
+                    owner.frame.origin.y += owner.titleLabel.frame.height
+                    owner.layoutIfNeeded()
+                }
+            })
+            .disposed(by: disposeBag)
+//
 //        emailTextField.isEnable
 //            .asDriver(onErrorJustReturn: false)
 //            .drive(certifyEmailButton.rx.isActive)

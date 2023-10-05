@@ -32,7 +32,7 @@ final class PasswordCheckView: UIView {
             maxCount: 20,
             errorMessage: "잘못된 비밀번호 입니다."
         )
-        textFieldView.textField.isSecureTextEntry = true
+        textFieldView.isSecureTextEntry = true
         return textFieldView
     }()
     
@@ -44,7 +44,7 @@ final class PasswordCheckView: UIView {
         )
         /// 비밀번호 확인은 우선 터치 막아두자
         textFieldView.isUserInteractionEnabled = false
-        textFieldView.textField.isSecureTextEntry = true
+        textFieldView.isSecureTextEntry = true
         return textFieldView
     }()
     
@@ -145,7 +145,7 @@ final class PasswordCheckView: UIView {
     // TODO: 원래는 Usecase에 들어가야할 애들인데, 일단은 여기에 다 박아둠
     
     private func bind(){
-        passwordTextField.textField.rx.text.orEmpty
+        passwordTextField.rx.text.orEmpty
             .asDriver()
             .distinctUntilChanged()
             .drive(onNext: { [weak self] text in
@@ -174,11 +174,11 @@ final class PasswordCheckView: UIView {
             })
             .disposed(by: disposeBag)
         
-        passwordCheckTextField.textField.rx.text.orEmpty
+        passwordCheckTextField.rx.text.orEmpty
             .asDriver()
             .drive(onNext: { [weak self] text in
                 guard let self = self else { return }
-                text == passwordTextField.textField.text! && !text.isEmpty ? self.checkPasswordValied.onNext(true) : self.checkPasswordValied.onNext(false)
+                text == passwordTextField.text! && !text.isEmpty ? self.checkPasswordValied.onNext(true) : self.checkPasswordValied.onNext(false)
             })
             .disposed(by: disposeBag)
         
