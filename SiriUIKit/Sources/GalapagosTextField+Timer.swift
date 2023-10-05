@@ -59,7 +59,7 @@ public final class GalapagosTextField_Timer: UIView {
     }()
     
     // MARK: - Properties
-    typealias TextFieldWithTimerUISet = (borderColor: UIColor, textFieldBackgroundColor: UIColor, textFieldTextColor: UIColor, errorMessageHidden: Bool, isTimerOn: Bool, isUserInteractive: Bool)
+    typealias TextFieldWithTimerUISet = (borderColor: UIColor, textFieldBackgroundColor: UIColor, textFieldTextColor: UIColor, errorMessageHidden: Bool, isUserInteractive: Bool)
     
     private var disposeBag = DisposeBag()
     
@@ -120,7 +120,7 @@ public final class GalapagosTextField_Timer: UIView {
         
         certifyButton.snp.makeConstraints {
             $0.centerY.equalTo(textField)
-            $0.trailing.equalToSuperview()
+            $0.trailing.equalToSuperview().offset(-20)
             $0.height.equalTo(37)
             $0.width.equalTo(49)
         }
@@ -228,7 +228,6 @@ extension GalapagosTextField_Timer{
                         textFieldBackgroundColor: SiriUIKitAsset.white기본화이트.color,
                         textFieldTextColor: SiriUIKitAsset.gray1본문Body.color,
                         errorMessageHidden: true,
-                        isTimerOn: false,
                         isUserInteractive: true
                     )
                 case .focus:
@@ -237,7 +236,6 @@ extension GalapagosTextField_Timer{
                         textFieldBackgroundColor: SiriUIKitAsset.white기본화이트.color,
                         textFieldTextColor: SiriUIKitAsset.gray1본문Body.color,
                         errorMessageHidden: true,
-                        isTimerOn: true,
                         isUserInteractive: true
                     )
                 case .filed:
@@ -246,7 +244,6 @@ extension GalapagosTextField_Timer{
                         textFieldBackgroundColor: SiriUIKitAsset.white기본화이트.color,
                         textFieldTextColor: SiriUIKitAsset.gray1본문Body.color,
                         errorMessageHidden: true,
-                        isTimerOn: true,
                         isUserInteractive: true
                     )
                 case .disabled:
@@ -255,7 +252,6 @@ extension GalapagosTextField_Timer{
                         textFieldBackgroundColor: SiriUIKitAsset.gray3DisableButtonBg.color,
                         textFieldTextColor: SiriUIKitAsset.gray5DisableText2.color,
                         errorMessageHidden: true,
-                        isTimerOn: false,
                         isUserInteractive: false
                     )
                 case .error:
@@ -264,7 +260,6 @@ extension GalapagosTextField_Timer{
                         textFieldBackgroundColor: SiriUIKitAsset.white기본화이트.color,
                         textFieldTextColor: SiriUIKitAsset.gray1본문Body.color,
                         errorMessageHidden: false,
-                        isTimerOn: true,
                         isUserInteractive: true
                     )
                     
