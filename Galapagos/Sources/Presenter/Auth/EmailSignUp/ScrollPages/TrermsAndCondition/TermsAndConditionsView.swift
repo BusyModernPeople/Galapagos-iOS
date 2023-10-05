@@ -183,7 +183,6 @@ final class TermsAndConditionsView: UIView {
     
     // MARK: - Initializers
     init(
-        frame: CGRect,
         parentViewModel: EmailSignUpViewModel,
         viewModel: TermsAndConditionsViewModel
     ) {
