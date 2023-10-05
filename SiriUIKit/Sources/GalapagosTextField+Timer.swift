@@ -43,9 +43,8 @@ public final class GalapagosTextField_Timer: UIView {
     
     private lazy var timerLabel: UILabel = {
         let label = UILabel()
-        label.text = "03:00"
         label.textColor = SiriUIKitAsset.green.color
-        label.font = SiriUIKitFontFamily.Pretendard.regular.font(size: 12)
+        label.font = SiriUIKitFontFamily.Pretendard.medium.font(size: 16)
         return label
     }()
     
@@ -62,14 +61,17 @@ public final class GalapagosTextField_Timer: UIView {
     typealias TextFieldWithTimerUISet = (borderColor: UIColor, textFieldBackgroundColor: UIColor, textFieldTextColor: UIColor, errorMessageHidden: Bool, isUserInteractive: Bool)
     
     private var disposeBag = DisposeBag()
+    private var timerDisposeBag = DisposeBag()
     
     private var placeHolder: String
     private var maxCount: Int
     private var errorMessage: String
     
-    private var isTimerOn: Bool = false /// 기존의 clearMode와 동일
+    /// 차후에 커스텀으로 사용 할 일 있으면, 변수로 빼자
     
-    public var rxType = BehaviorRelay<TextFieldWithTimerType>(value: .def)
+    private var timerCountRelay = BehaviorRelay<Int>(value: 180)
+    public var rxType = BehaviorRelay<TextFieldWithTimerType>(value: .disabled)
+    public var resetTimerSubject = PublishSubject<Void>()
     
     /// 텍스트필드의 `placeHolder`, `maxCount`, `errorMessage`를 설정합니다.
     /// - Parameters:
@@ -77,7 +79,6 @@ public final class GalapagosTextField_Timer: UIView {
     ///   - maxCount : 최대 입력 가능한 글자 수 ( 0이면, 제한 없음 )
     ///   - errorMessage : error상황에 따른 메세지 (ex: 이메일 형식이 아닙니다.)
     /// - Parameters (Optional):
-    ///   - isTimerOn : 타이머 On Off
     // MARK: - Initializers
     public init(
         placeHolder: String,
@@ -121,7 +122,7 @@ public final class GalapagosTextField_Timer: UIView {
         certifyButton.snp.makeConstraints {
             $0.centerY.equalTo(textField)
             $0.trailing.equalToSuperview().offset(-20)
-            $0.height.equalTo(37)
+            $0.top.bottom.equalTo(textField).GalapagosInset(inset: ._12)
             $0.width.equalTo(49)
         }
         
@@ -143,6 +144,23 @@ public final class GalapagosTextField_Timer: UIView {
     
     private func bind() {
         
+        resetTimerSubject
+            .subscribe(onNext: { [weak self] in
+                guard let self = self else { return }
+                self.resetTimer()
+            })
+            .disposed(by: disposeBag)
+        
+        rxType
+            .distinctUntilChanged()
+            .asDriver(onErrorJustReturn: .def)
+            .drive(onNext: { [weak self] type in
+                guard let self = self else { return }
+                let isTimerOn = (type != .error && type != .disabled)
+                self.controlTimer(isOn: isTimerOn)
+            })
+            .disposed(by: disposeBag)
+        
         rxType
             .distinctUntilChanged()
             .asDriver(onErrorJustReturn: .def)
@@ -161,6 +179,7 @@ public final class GalapagosTextField_Timer: UIView {
                 : self.certifyButton.makeCustomState(type: .Usage(.Disabled))
             })
             .disposed(by: disposeBag)
+        
     }
     
     private func configureColorSet(type: TextFieldWithTimerType) {
@@ -179,20 +198,56 @@ public final class GalapagosTextField_Timer: UIView {
         rxType.accept(textFieldWithTimerState)
     }
     
+    private func startTimer() {
+        timerDisposeBag = DisposeBag() // 이전 타이머 구독 해제
+        
+        Observable<Int>
+            .timer(.seconds(0), period: .seconds(1), scheduler: MainScheduler.instance)
+            .debug()
+            .withLatestFrom(timerCountRelay.asObservable()) { _, count in count }
+            .map { $0 - 1 }
+            .do(onNext: { [weak self] newCount in
+                self?.timerCountRelay.accept(newCount)
+            })
+            .take(while: {  $0 >= 0 })
+            .map { timeInSeconds -> String in
+                let minutes = timeInSeconds / 60
+                let seconds = timeInSeconds % 60
+                return String(format: "%02d:%02d", minutes, seconds)
+            }
+            .debug()
+            .asDriver(onErrorJustReturn: "Error")
+            .drive(timerLabel.rx.text)
+            .disposed(by: timerDisposeBag)
+    }
+    
+    private func resetTimer() {
+        timerCountRelay.accept(180)  // 초기 시간을 180초로 설정
+        startTimer()                 // 타이머 다시 시작
+    }
+
+    private func controlTimer(isOn: Bool) {
+        if isOn {
+            startTimer()
+        } else {
+            timerDisposeBag = DisposeBag() // 타이머 구독 해제
+        }
+    }
+
+
 }
 
 
 extension GalapagosTextField_Timer{
     
     /// TextField의 상태에 따라서
-    /// `Boarder color`, `textField background color`, `textField text attribute color`,
-    /// `errorMessage Hidden`, `isTimerOn`, `isUserInteractive` 를 선택한다.
+    /// `Boarder color`, `textField background color`, `textField text color`,
+    /// `errorMessage Hidden`, `isUserInteractive` 를 선택한다.
     /// - Parameters:
     ///   - BorderColor : TextField의 border color 색상
     ///   - textFieldBackgroundColor : TextField의 background color 색상
     ///   - textFieldTextColor : TextField의 text  color 색상
     ///   - errorMessageHidden : errorMessage의 hidden 여부
-    ///   - clearMode : 타이머의 isHidden 여부
     ///   - isUserInteractive : TextField의 isUserInteractive
     
     
