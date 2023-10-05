@@ -84,7 +84,7 @@ public final class GalapagosProgressPager: UIView {
         }
         
         self.pagerScrollView.snp.makeConstraints { scrollView in
-            scrollView.top.equalTo(progressView.snp.bottom).offset(40)
+            scrollView.top.equalTo(progressView.snp.bottom)
             scrollView.leading.trailing.bottom.equalTo(self)
         }
     }
