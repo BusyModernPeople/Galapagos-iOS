@@ -28,6 +28,8 @@ public final class GalapagosTextField: UIView{
         textField.layer.cornerRadius = 8
         textField.layer.borderWidth = 1
         textField.keyboardType = keyboardType
+        textField.font = SiriUIKitFontFamily.Pretendard.medium.font(size: 18)
+        textField.textColor = SiriUIKitAsset.black제목DisplayHeadingBody.color
         return textField
     }()
     
@@ -67,6 +69,22 @@ public final class GalapagosTextField: UIView{
     private var clearMode: Bool = false
     
     public var rxType = BehaviorRelay<TextFieldType>(value: .def)
+    public var text: String? {
+        get {
+            return textField.text
+        }
+        set {
+            textField.text = newValue
+        }
+    }
+    public var isSecureTextEntry: Bool {
+        get {
+            return textField.isSecureTextEntry
+        }
+        set {
+            textField.isSecureTextEntry = newValue
+        }
+    }
     
     /// 텍스트필드의 `placeHolder`, `maxCount`, `errorMessage`를 설정합니다.
     /// - Parameters:
@@ -76,6 +94,10 @@ public final class GalapagosTextField: UIView{
     /// - Parameters (Optional):
     ///   - keyboardType : 키보드 타입
     ///   - clearMode : clear 버튼 On Off
+    /// - Parameters (Accessable):
+    ///   - text: textField의 text값
+    ///   - isSecureTextEntry: 텍스트 숨김 여부
+    ///   - rxType: GalapagosTextField의 타입변환 조종값
     // MARK: - Initializers
     public init(
         placeHolder: String,
