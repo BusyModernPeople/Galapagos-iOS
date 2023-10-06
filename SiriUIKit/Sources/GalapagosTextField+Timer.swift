@@ -33,7 +33,7 @@ public final class GalapagosTextField_Timer: UIView {
         return textField
     }()
     
-    private lazy var certifyButton: GalapagosButton = {
+    fileprivate lazy var certifyButton: GalapagosButton = {
         let button = GalapagosButton(isRound: false,
                                      iconTitle: nil,
                                      type: .Usage(.Disabled),
@@ -192,6 +192,11 @@ public final class GalapagosTextField_Timer: UIView {
         timerLabel.textColor = type.timerColor
         self.isUserInteractionEnabled = UISet.isUserInteractive
         
+        if type == .error || type == .disabled {
+            certifyButton.rxType.accept(.Usage(.Disabled))
+        } else {
+            certifyButton.rxType.accept(.Usage(.Inactive))
+        }
     }
     
     func makeCustomState(textFieldWithTimerState: TextFieldWithTimerType) {
@@ -203,7 +208,6 @@ public final class GalapagosTextField_Timer: UIView {
         
         Observable<Int>
             .timer(.seconds(0), period: .seconds(1), scheduler: MainScheduler.instance)
-            .debug()
             .withLatestFrom(timerCountRelay.asObservable()) { _, count in count }
             .map { $0 - 1 }
             .do(onNext: { [weak self] newCount in
@@ -215,7 +219,6 @@ public final class GalapagosTextField_Timer: UIView {
                 let seconds = timeInSeconds % 60
                 return String(format: "%02d:%02d", minutes, seconds)
             }
-            .debug()
             .asDriver(onErrorJustReturn: "Error")
             .drive(timerLabel.rx.text)
             .disposed(by: timerDisposeBag)
@@ -272,7 +275,6 @@ extension GalapagosTextField_Timer{
                     return SiriUIKitAsset.redErrorText.color
             }
         }
-        
         
         
         var UISet: TextFieldWithTimerUISet {
@@ -368,4 +370,7 @@ extension Reactive where Base: GalapagosTextField_Timer {
         }
     }
     
+    public var confirmBtnTapped: ControlEvent<Void> {
+        return self.base.certifyButton.rx.tap
+    }
 }
