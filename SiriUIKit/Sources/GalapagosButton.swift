@@ -47,7 +47,7 @@ public final class GalapagosButton: UIView{
     private var title: String
     private var type: GalapagosButtonType
     
-    public var isSelected = BehaviorRelay<Bool>(value: false)
+    public var tapped = PublishRelay<Void>()
     
     public var rxType = BehaviorRelay<GalapagosButtonType>(value: .Fill)
     
@@ -110,11 +110,11 @@ public final class GalapagosButton: UIView{
     private func bind() {
         self.rx.tapGesture()
             .when(.recognized)
-            .subscribe(onNext: { _ in
-                let state = !self.isSelected.value
-                self.isSelected.accept(state)
+            .subscribe(onNext: { [weak self] _ in
+                self?.tapped.accept(())
             })
             .disposed(by: disposeBag)
+
         
         rxType
             .withUnretained(self)
