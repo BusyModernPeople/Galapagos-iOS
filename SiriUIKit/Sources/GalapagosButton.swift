@@ -47,8 +47,6 @@ public final class GalapagosButton: UIView{
     private var title: String
     private var type: GalapagosButtonType
     
-    public var tapped = PublishRelay<Void>()
-    
     public var rxType = BehaviorRelay<GalapagosButtonType>(value: .Fill)
     
     //MARK: - Initializers
@@ -108,13 +106,6 @@ public final class GalapagosButton: UIView{
     }
     
     private func bind() {
-        self.rx.tapGesture()
-            .when(.recognized)
-            .subscribe(onNext: { [weak self] _ in
-                self?.tapped.accept(())
-            })
-            .disposed(by: disposeBag)
-
         
         rxType
             .withUnretained(self)
@@ -237,4 +228,14 @@ extension GalapagosButton{
     }
 
     
+}
+
+extension Reactive where Base: GalapagosButton {
+    public var tap: ControlEvent<Void> {
+        let source: Observable<Void> = self.base.rx.tapGesture()
+            .when(.recognized)
+            .map { _ in () }
+        return ControlEvent(events: source)
+    }
+
 }
