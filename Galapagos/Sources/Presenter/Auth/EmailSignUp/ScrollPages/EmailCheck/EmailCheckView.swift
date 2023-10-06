@@ -120,7 +120,7 @@ final class EmailCheckView: UIView {
             .withUnretained(self)
             .subscribe(onNext: { owner, _ in
                 UIView.animate(withDuration: 0.5) {
-                    owner.frame.origin.y -= owner.titleLabel.frame.height
+                    owner.frame.origin.y -= (owner.titleLabel.frame.height + 40)
                     owner.layoutIfNeeded()
                 }
             })
@@ -131,7 +131,7 @@ final class EmailCheckView: UIView {
             .withUnretained(self)
             .subscribe(onNext: { owner, _ in
                 UIView.animate(withDuration: 0.5) {
-                    owner.frame.origin.y += owner.titleLabel.frame.height
+                    owner.frame.origin.y += (owner.titleLabel.frame.height + 40)
                     owner.layoutIfNeeded()
                 }
             })
