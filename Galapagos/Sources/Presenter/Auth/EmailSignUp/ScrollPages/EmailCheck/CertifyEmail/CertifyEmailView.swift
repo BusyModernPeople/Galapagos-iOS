@@ -85,7 +85,7 @@ final class CertifyEmailView: BaseView {
         
         let input = CertifyEmailViewModel.Input(
             email: emailTextField.rx.text.orEmpty.asObservable(),
-            sendCodeButtonTapped: certifyEmailButton.rx.tapGesture().when(.recognized).map{_ in }.asObservable()
+            sendCodeButtonTapped: certifyEmailButton.rx.tap.asObservable()
         )
         
         let output = viewModel.transform(input: input)
@@ -104,7 +104,8 @@ final class CertifyEmailView: BaseView {
             })
             .disposed(by: disposeBag)
         
-        emailTextField.rxType   /// 얘는 디자인시스템에 종속되는 놈이라서,,,, 그냥 여기서 동작하자
+        
+        emailTextField.rxType
             .asObservable()
             .subscribe(onNext: { type in
                 if type == .filed {
@@ -114,5 +115,14 @@ final class CertifyEmailView: BaseView {
                 }
             })
             .disposed(by: disposeBag)
+        
+        emailTextField.rx.text.orEmpty
+            .asDriver(onErrorJustReturn: "")
+            .drive(onNext: { [weak self] email in
+                guard let self = self else { return }
+                self.parentViewModel.userEmail.accept(email)
+            })
+            .disposed(by: disposeBag)
+        
     }
 }

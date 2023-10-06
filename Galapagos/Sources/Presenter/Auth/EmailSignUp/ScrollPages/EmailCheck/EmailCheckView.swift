@@ -31,7 +31,7 @@ final class EmailCheckView: UIView {
         let view = CertifyEmailView(
             viewModel: CertifyEmailViewModel(
                 usecase: DefaultCertifyCodeWithEmailUsecase(
-                    authRepository: DefaultAuthRepository()
+                    authRepository: DefaultEmailRepository()
                 )
             ),
             parentViewModel: viewModel
@@ -40,7 +40,14 @@ final class EmailCheckView: UIView {
     }()
     
     private lazy var certifyCodeView: CertifyCodeView = {
-        let view = CertifyCodeView()
+        let view = CertifyCodeView(
+            viewModel: CertifyCodeViewModel(
+                usecase: DefaultCertifyCodeWithEmailUsecase(
+                    authRepository: DefaultEmailRepository()
+                )
+            ),
+            parentViewModel: viewModel
+        )
         return view
     }()
     
@@ -104,7 +111,10 @@ final class EmailCheckView: UIView {
     
     private func bind() {
         
-        viewModel.certifyCodeIsHidden
+        let input = EmailCheckViewModel.Input()
+        let output = viewModel.transform(input: input)
+        
+        output.certifyCodeIsHidden
             .observe(on: MainScheduler.instance)
             .withUnretained(self)
             .subscribe(onNext: { owner, isHidden in
@@ -115,6 +125,13 @@ final class EmailCheckView: UIView {
             })
             .disposed(by: disposeBag)
         
+        output.nextButtonIsAvailable
+            .observe(on: MainScheduler.instance)
+            .withUnretained(self)
+            .subscribe(onNext: { owner, isAvailable in
+                owner.parentViewModel.readyForNextButton.accept(isAvailable)
+            })
+            .disposed(by: disposeBag)
         
         certifyCodeView.timerTextField.rx.controlEvent([.editingDidBegin])
             .withUnretained(self)
@@ -136,56 +153,6 @@ final class EmailCheckView: UIView {
                 }
             })
             .disposed(by: disposeBag)
-//
-//        emailTextField.isEnable
-//            .asDriver(onErrorJustReturn: false)
-//            .drive(certifyEmailButton.rx.isActive)
-//            .disposed(by: disposeBag)
-//        
-//        certifyEmailButton.rx.tap
-//            .subscribe(onNext: { [weak self] in
-//                guard let self = self else { return }
-//                // TODO: 이메엘 인증 API호출 (Usecase통해서)
-//                // 인증 성공 결과를 Observable<Bool>로 전달 해줘야함
-//                
-//                /// 임시 fake
-//                self.emailCertified.accept(true)
-//                self.emailTextField.isEnable.accept(false)
-//                self.emailTextField.isUserInteractionEnabled = false
-//            })
-//            .disposed(by: disposeBag)
-//        
-        // TODO: 이메일 인증받은 결과를 subscribe 해줘야함
-        // 그리고, 결과에 따라서 인증코드 확인하는 View 보여줘야함
-//        emailCertified
-//            .distinctUntilChanged() // 기본값이 false라서, 인증이 될 때만 통과함
-//            .subscribe(onNext: { [weak self] isCertified in
-//                guard let self = self else { return }
-//                if isCertified{
-//                    // TODO: 인증된 상태라면 isHidden풀어주고, timer on
-//                    self.checkCertifiCodeView.isHidden = false
-//                    self.checkCertifiCodeView.isTimerStarted.accept(true)
-//                }else{
-//                    self.checkCertifiCodeView.isTimerStarted.accept(false)
-//                }
-//            })
-//            .disposed(by: disposeBag)
-//        
-        // TODO: 확인버튼 눌렀을 때, API호출 해야함. 그리고 결과를 Observable<Bool>로 반환
-//        
-//        checkCertifiCodeView.isButtonTapped
-//            .asDriver(onErrorJustReturn: false)
-//            .drive(onNext: { [weak self] isTapped in
-//                guard let self = self else { return }
-//                // TODO: 인증코드 확인하는 API호출 해야함 (Usecase에서)
-//                // 코드의 인증 결과를 Bool타입으로 전달해줘야함
-//                
-//                // Fake
-//                self.viewModel.readyForNextButton.accept(true)
-//            })
-//            .disposed(by: disposeBag)
-//        
-        // TODO: 만약, 인증코드가 잘 되어있으면 -> isButtonTapped에 true전달, checkButton 비활성화, 해당 뷰 isUserInteractionEnabled 꺼주기 | 인증코드가 잘 안되어 있으면 -> 반댓값
     }
 }
 

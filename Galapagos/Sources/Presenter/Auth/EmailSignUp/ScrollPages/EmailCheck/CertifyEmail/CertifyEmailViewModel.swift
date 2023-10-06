@@ -23,9 +23,9 @@ final class CertifyEmailViewModel: ViewModelType {
     }
     
     var disposeBag: DisposeBag = DisposeBag()
-    private let usecase: CertifyCodeWithEmailUsecase
+    private let usecase: CertifyEmailUsecase
     
-    init(usecase: CertifyCodeWithEmailUsecase) {
+    init(usecase: CertifyEmailUsecase) {
         self.usecase = usecase
     }
     

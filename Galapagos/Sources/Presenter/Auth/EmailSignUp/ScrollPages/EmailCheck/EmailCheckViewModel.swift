@@ -19,16 +19,21 @@ final class EmailCheckViewModel: ViewModelType {
     }
     
     struct Output {
-        
+        let certifyCodeIsHidden: Observable<Bool>
+        let nextButtonIsAvailable: Observable<Bool>
     }
     
     var disposeBag: DisposeBag = DisposeBag()
     
     var certifyCodeIsHidden = BehaviorRelay<Bool>(value: true)
-    
+    var nextButtonIsAvailable = BehaviorRelay<Bool>(value: false)
+    var userEmail = BehaviorRelay<String>(value: "")
     
     func transform(input: Input) -> Output {
         
-        return Output()
+        return Output(
+            certifyCodeIsHidden: certifyCodeIsHidden.asObservable(),
+            nextButtonIsAvailable: nextButtonIsAvailable.asObservable()
+        )
     }
 }

@@ -10,16 +10,21 @@ import Foundation
 import RxSwift
 
 
-class DefaultCertifyCodeWithEmailUsecase: CertifyCodeWithEmailUsecase {
+class DefaultCertifyCodeWithEmailUsecase: CertifyEmailUsecase {
     
-    private let authRepository: AuthRepository
+    private let authRepository: EmailRepository
     
-    init(authRepository: AuthRepository) {
+    init(authRepository: EmailRepository) {
         self.authRepository = authRepository
     }
     
     func sendCodeWithEmail(body: SendCodeWithEmailBody) -> Single<String> {
         return authRepository.sendCodeWithEmail(body: body)
+            .map { $0.message }
+    }
+    
+    func sendCertifyCode(body: CertifyCodeBody) -> Single<String> {
+        return authRepository.sendCertifyCode(body: body)
             .map { $0.message }
     }
 }

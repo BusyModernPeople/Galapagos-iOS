@@ -20,4 +20,14 @@ class Utility {
             return nil
         }
     }
+    
+    static func decodeError(from data: Data) -> ServerError {
+        do {
+            let decodedObject = try JSONDecoder().decode(ServerError.self, from: data)
+            return decodedObject
+        } catch {
+            return ServerError(status: 404, errorCode: 999, errorMessages: "Failed to decode ServerError from data: \(error)")
+        }
+    }
+
 }

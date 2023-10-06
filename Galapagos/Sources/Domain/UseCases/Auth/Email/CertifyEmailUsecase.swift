@@ -1,5 +1,5 @@
 //
-//  CertifyCodeWithEmailUsecase.swift
+//  CertifyEmailUsecase.swift
 //  Galapagos
 //
 //  Created by Siri on 2023/10/04.
@@ -9,7 +9,8 @@
 import Foundation
 import RxSwift
 
-protocol CertifyCodeWithEmailUsecase {
+protocol CertifyEmailUsecase {
     func sendCodeWithEmail(body: SendCodeWithEmailBody) -> Single<String>
+    func sendCertifyCode(body: CertifyCodeBody) -> Single<String>
 }
 

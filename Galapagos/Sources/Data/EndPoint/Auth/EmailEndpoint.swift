@@ -1,5 +1,5 @@
 //
-//  AuthEndpoint.swift
+//  EmailEndpoint.swift
 //  Galapagos
 //
 //  Created by Siri on 2023/10/04.
@@ -8,9 +8,12 @@
 
 import Foundation
 
-enum AuthEndpoint: Endpoint {
+enum EmailEndpoint: Endpoint {
     
     case sendCodeWithEmail(body: SendCodeWithEmailBody)
+    case certifyCode(body: CertifyCodeBody)
+    
+    
     
     var baseURL: URL? {
         return URL(string: "http://3.34.8.109:3040/email")
@@ -18,8 +21,9 @@ enum AuthEndpoint: Endpoint {
     
     var method: HTTPMethod {
         switch self {
-            case .sendCodeWithEmail:
+            case .sendCodeWithEmail, .certifyCode:
                 return .POST
+                
         }
     }
     
@@ -27,6 +31,8 @@ enum AuthEndpoint: Endpoint {
         switch self {
             case .sendCodeWithEmail:
                 return "/send-code"
+            case .certifyCode:
+                return "/confirm"
         }
     
     }
@@ -34,6 +40,8 @@ enum AuthEndpoint: Endpoint {
     var parameters: HTTPRequestParameterType? {
         switch self {
             case .sendCodeWithEmail(let body):
+                return .body(body)
+            case .certifyCode(let body):
                 return .body(body)
         }
     }

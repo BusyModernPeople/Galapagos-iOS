@@ -44,9 +44,15 @@ final class CertifyCodeView: BaseView {
     
     // MARK: - Properties
     
+    private let viewModel: CertifyCodeViewModel
+    private let parentViewModel: EmailCheckViewModel
     
     // MARK: - Initialize
-    override init(frame: CGRect) {
+    init(viewModel: CertifyCodeViewModel,
+         parentViewModel: EmailCheckViewModel) {
+        self.viewModel = viewModel
+        self.parentViewModel = parentViewModel
+        
         super.init(frame: .zero)
     }
     
@@ -88,8 +94,43 @@ final class CertifyCodeView: BaseView {
     override func bind() {
         super.bind()
         
+        let input = CertifyCodeViewModel.Input(certifyCode: timerTextField.rx.text.orEmpty.asObservable(),
+                                               email: parentViewModel.userEmail.asObservable(),
+                                               sendCertifyCodeTapped: timerTextField.rx.confirmBtnTapped.asObservable(),
+                                               reSendEmailTapped: reSendEmail.rx.tap.asObservable())
+        
+        let output = viewModel.transform(input: input)
+        
+        
+        
         reSendEmail.rx.tap
             .bind(to: timerTextField.resetTimerSubject)
+            .disposed(by: disposeBag)
+        
+        output.resultOfCertify
+            .skip(1)
+            .withUnretained(self)
+            .subscribe(onNext: { owner, isAvailable in
+                owner.parentViewModel.nextButtonIsAvailable.accept(isAvailable)
+                if isAvailable {
+                    owner.timerTextField.rxType.accept(.disabled)
+                } else {
+                    owner.timerTextField.rxType.accept(.error)
+                }
+            })
+            .disposed(by: disposeBag)
+        
+        output.receivedMessage
+            .subscribe(onNext: { message in
+                print("✨ 인증결과는?: \(message) ✨")
+            })
+            .disposed(by: disposeBag)
+        
+        
+        output.resendEmailMessage
+            .subscribe(onNext: { message in
+                print("✨ 다시 보내기 결과는?: \(message) ✨")
+            })
             .disposed(by: disposeBag)
     }
     // MARK: - Methods

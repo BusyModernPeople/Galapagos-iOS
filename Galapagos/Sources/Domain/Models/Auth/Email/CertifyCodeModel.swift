@@ -1,5 +1,5 @@
 //
-//  CertifyCode.swift
+//  CertifyCodeModel.swift
 //  Galapagos
 //
 //  Created by Siri on 2023/10/04.
@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct CertifyCode: Codable {
+struct CertifyCodeModel: Codable {
     let message: String
 }
 

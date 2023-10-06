@@ -1,5 +1,5 @@
 //
-//  AuthRepository.swift
+//  CertifyCodeBody.swift
 //  Galapagos
 //
 //  Created by Siri on 2023/10/04.
@@ -7,8 +7,8 @@
 //
 
 import Foundation
-import RxSwift
 
-protocol AuthRepository {
-    func sendCodeWithEmail(body: SendCodeWithEmailBody) -> Single<CertifyCode>
+struct CertifyCodeBody: Codable {
+    let email: String
+    let code: String
 }

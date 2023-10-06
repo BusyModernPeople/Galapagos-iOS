@@ -12,8 +12,8 @@ import Foundation
 struct CertifyCodeWithEmailDTO: Codable {
     let message: String
     
-    func toDomain() -> CertifyCode {
-        return CertifyCode(message: message)
+    func toDomain() -> CertifyCodeModel {
+        return CertifyCodeModel(message: message)
     }
 }
 
