@@ -31,10 +31,18 @@ final class CertifyCodeView: BaseView {
         return textField
     }()
     
+    public lazy var errorMessage: GalapagosErrorMessage = {
+        let errorMessage = GalapagosErrorMessage(
+            title: "인증코드를 받지 못하셨나요?",
+            type: .Info
+        )
+        return errorMessage
+    }()
+    
     public lazy var reSendEmail: UIButton = {
         let button = UIButton()
         button.setUnderlineTitle(
-            "인증코드 재전송",
+            "이메일 재전송",
             font: SiriUIKitFontFamily.Pretendard.medium.font(size: 14),
             color: GalapagosAsset.black제목DisplayHeadingBody.color
         )
@@ -55,6 +63,7 @@ final class CertifyCodeView: BaseView {
         self.parentViewModel = parentViewModel
         
         super.init(frame: .zero)
+        self.backgroundColor = GalapagosAsset.gray5Bg2.color
     }
     
     override func setAddSubView() {
@@ -62,6 +71,7 @@ final class CertifyCodeView: BaseView {
         addSubviews([
             infoLabel,
             timerTextField,
+            errorMessage,
             reSendEmail
         ])
     
@@ -81,9 +91,14 @@ final class CertifyCodeView: BaseView {
             $0.height.equalTo(68)
         }
     
-        reSendEmail.snp.makeConstraints {
-            $0.trailing.equalTo(timerTextField.snp.trailing)
+        errorMessage.snp.makeConstraints {
             $0.top.equalTo(timerTextField.snp.bottom).offset(6)
+            $0.leading.equalToSuperview()
+        }
+        
+        reSendEmail.snp.makeConstraints {
+            $0.leading.equalTo(errorMessage.snp.trailing).offset(4)
+            $0.centerY.equalTo(errorMessage)
         }
         
     }
@@ -102,7 +117,12 @@ final class CertifyCodeView: BaseView {
         
         let output = viewModel.transform(input: input)
         
-        
+        timerTextField.rx.controlEvent(.editingDidBegin)
+            .asDriver()
+            .drive(onNext: { [weak self] in
+                self?.errorMessage.reset()
+            })
+            .disposed(by: disposeBag)
         
         reSendEmail.rx.tap
             .bind(to: timerTextField.resetTimerSubject)
@@ -111,19 +131,25 @@ final class CertifyCodeView: BaseView {
         output.resultOfCertify
             .skip(1)
             .withUnretained(self)
+            .observe(on: MainScheduler.instance)
             .subscribe(onNext: { owner, isAvailable in
                 owner.parentViewModel.nextButtonIsAvailable.accept(isAvailable)
+                owner.reSendEmail.isHidden = isAvailable
                 if isAvailable {
                     owner.timerTextField.rxType.accept(.disabled)
+                    owner.errorMessage.rxType.accept(.Success)
                 } else {
                     owner.timerTextField.rxType.accept(.error)
+                    owner.errorMessage.rxType.accept(.Error)
                 }
             })
             .disposed(by: disposeBag)
         
         output.receivedMessage
-            .subscribe(onNext: { message in
-                print("✨ 인증결과는?: \(message) ✨")
+            .withUnretained(self)
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { owner, message in
+                owner.errorMessage.setErrorMessage(message: message)
             })
             .disposed(by: disposeBag)
         

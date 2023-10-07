@@ -25,6 +25,14 @@ final class CertifyEmailView: BaseView {
         return textField
     }()
     
+    public lazy var errorMessage: GalapagosErrorMessage = {
+        let errorMessage = GalapagosErrorMessage(
+            title: "",
+            type: .None
+        )
+        return errorMessage
+    }()
+    
     public lazy var certifyEmailButton: GalapagosButton = {
         let button = GalapagosButton(
             isRound: false,
@@ -46,6 +54,7 @@ final class CertifyEmailView: BaseView {
         self.parentViewModel = parentViewModel
         
         super.init(frame: .zero)
+        self.backgroundColor = GalapagosAsset.gray5Bg2.color
     }
     
     // MARK: - Methods
@@ -54,6 +63,7 @@ final class CertifyEmailView: BaseView {
         super.setAddSubView()
         addSubviews([
             emailTextField,
+            errorMessage,
             certifyEmailButton
         ])
     }
@@ -65,6 +75,11 @@ final class CertifyEmailView: BaseView {
             $0.top.equalToSuperview()
             $0.leading.trailing.equalToSuperview()
             $0.height.equalTo(68)
+        }
+        
+        errorMessage.snp.makeConstraints {
+            $0.top.equalTo(emailTextField.snp.bottom).offset(6)
+            $0.leading.equalToSuperview()
         }
         
         certifyEmailButton.snp.makeConstraints {

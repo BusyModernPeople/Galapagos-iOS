@@ -29,8 +29,7 @@ final class NicknameCheckView: UIView {
     private lazy var nickNameTextField: GalapagosTextField = {
         let textField = GalapagosTextField(
             placeHolder: "2-6자리로 입력해주세요",
-            maxCount: 6,
-            errorMessage: "잘못된 닉네임 입니다."
+            maxCount: 6
         )
         return textField
     }()
