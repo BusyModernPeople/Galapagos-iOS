@@ -33,9 +33,11 @@ final class CertifyCodeView: BaseView {
     
     public lazy var reSendEmail: UIButton = {
         let button = UIButton()
-        button.setTitle("인증코드 재전송", for: .normal)
-        button.titleLabel?.font = SiriUIKitFontFamily.Pretendard.medium.font(size: 14)
-        button.setTitleColor(GalapagosAsset.black제목DisplayHeadingBody.color, for: .normal)
+        button.setUnderlineTitle(
+            "인증코드 재전송",
+            font: SiriUIKitFontFamily.Pretendard.medium.font(size: 14),
+            color: GalapagosAsset.black제목DisplayHeadingBody.color
+        )
         return button
     }()
     

@@ -50,7 +50,7 @@ final class CertifyCodeViewModel: ViewModelType {
                         certifyResult.accept(false)
                     })
                     .catch { error in
-                        return Single.just("Error: \(error.localizedDescription)")
+                        return Single.just("\(error.localizedDescription)")
                     }
             }
             .share()
