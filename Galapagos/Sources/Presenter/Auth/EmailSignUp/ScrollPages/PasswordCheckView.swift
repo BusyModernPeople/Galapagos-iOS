@@ -29,8 +29,7 @@ final class PasswordCheckView: UIView {
     private lazy var passwordTextField: GalapagosTextField = {
         let textFieldView = GalapagosTextField(
             placeHolder: "비밀번호를 입력해주세요",
-            maxCount: 20,
-            errorMessage: "잘못된 비밀번호 입니다."
+            maxCount: 20
         )
         textFieldView.isSecureTextEntry = true
         return textFieldView
@@ -39,8 +38,7 @@ final class PasswordCheckView: UIView {
     private lazy var passwordCheckTextField: GalapagosTextField = {
         let textFieldView = GalapagosTextField(
             placeHolder: "비밀번호를 재입력해주세요",
-            maxCount: 20,
-            errorMessage: "잘못된 비밀번호 입니다."
+            maxCount: 20
         )
         /// 비밀번호 확인은 우선 터치 막아두자
         textFieldView.isUserInteractionEnabled = false

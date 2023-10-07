@@ -99,13 +99,13 @@ final class EmailCheckView: UIView {
         certifyEmailView.snp.makeConstraints {
             $0.top.equalTo(titleLabel.snp.bottom).offset(40)
             $0.leading.trailing.equalToSuperview().inset(24)
-            $0.height.equalTo(132)
+            $0.height.equalTo(148)
         }
         
         certifyCodeView.snp.makeConstraints {
             $0.top.equalTo(certifyEmailView.snp.bottom).offset(32)
             $0.leading.trailing.equalToSuperview().inset(24)
-            $0.height.equalTo(132)
+            $0.height.equalTo(148)
         }
     }
     
