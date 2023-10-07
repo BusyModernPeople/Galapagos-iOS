@@ -39,7 +39,9 @@ class EmailSignUpViewController: BaseViewController {
     }()
     
     private lazy var passwordCheckView: PasswordCheckView = {
-        let view = PasswordCheckView(frame: .zero, viewModel: viewModel)
+        let view = PasswordCheckView(
+            parentViewModel: viewModel,
+            viewModel: PasswordCheckViewModel())
         return view
     }()
     

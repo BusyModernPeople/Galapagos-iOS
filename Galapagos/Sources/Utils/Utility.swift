@@ -7,6 +7,9 @@
 //
 
 import Foundation
+import UIKit
+
+import RxSwift
 
 class Utility {
     
@@ -30,4 +33,10 @@ class Utility {
         }
     }
 
+    static func checkPasswordValidation(password: Observable<String>, validate: PasswordValidate) -> Observable<Bool> {
+        let passwordTest = NSPredicate(format: "SELF MATCHES %@", validate.validate)
+        return password.map { password in
+            return passwordTest.evaluate(with: password)
+        }
+    }
 }
