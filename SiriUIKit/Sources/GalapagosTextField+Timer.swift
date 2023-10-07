@@ -48,24 +48,14 @@ public final class GalapagosTextField_Timer: UIView {
         return label
     }()
     
-    private lazy var errorMessagelabel: UILabel = {
-        let label = UILabel()
-        label.text = errorMessage
-        label.textColor = SiriUIKitAsset.redErrorText.color
-        label.semanticContentAttribute = .forceLeftToRight
-        label.font = SiriUIKitFontFamily.Pretendard.regular.font(size: 12)
-        return label
-    }()
-    
     // MARK: - Properties
-    typealias TextFieldWithTimerUISet = (borderColor: UIColor, textFieldBackgroundColor: UIColor, textFieldTextColor: UIColor, errorMessageHidden: Bool, isUserInteractive: Bool)
+    typealias TextFieldWithTimerUISet = (borderColor: UIColor, textFieldBackgroundColor: UIColor, textFieldTextColor: UIColor, isUserInteractive: Bool)
     
     private var disposeBag = DisposeBag()
     private var timerDisposeBag = DisposeBag()
     
     private var placeHolder: String
     private var maxCount: Int
-    private var errorMessage: String
     
     /// 차후에 커스텀으로 사용 할 일 있으면, 변수로 빼자
     
@@ -77,17 +67,14 @@ public final class GalapagosTextField_Timer: UIView {
     /// - Parameters:
     ///   - placeHolder : placeHolder로 들어갈 텍스트
     ///   - maxCount : 최대 입력 가능한 글자 수 ( 0이면, 제한 없음 )
-    ///   - errorMessage : error상황에 따른 메세지 (ex: 이메일 형식이 아닙니다.)
     /// - Parameters (Optional):
     // MARK: - Initializers
     public init(
         placeHolder: String,
-        maxCount: Int,
-        errorMessage: String
+        maxCount: Int
     ) {
         self.placeHolder = placeHolder
         self.maxCount = maxCount
-        self.errorMessage = errorMessage
         
         super.init(frame: .zero)
         
@@ -109,7 +96,6 @@ public final class GalapagosTextField_Timer: UIView {
         self.addSubview(textField)
         self.addSubview(certifyButton)
         self.addSubview(timerLabel)
-        self.addSubview(errorMessagelabel)
     }
     
     private func setConstraint() {
@@ -127,13 +113,6 @@ public final class GalapagosTextField_Timer: UIView {
         }
         
         timerLabel.snp.makeConstraints {
-            $0.centerY.equalTo(textField)
-            $0.trailing.equalTo(certifyButton.snp.leading).offset(-10)
-            $0.height.equalTo(24)
-            $0.width.equalTo(44)
-        }
-        
-        errorMessagelabel.snp.makeConstraints {
             $0.centerY.equalTo(textField)
             $0.trailing.equalTo(certifyButton.snp.leading).offset(-10)
             $0.height.equalTo(24)
@@ -188,7 +167,6 @@ public final class GalapagosTextField_Timer: UIView {
         textField.layer.borderColor = UISet.borderColor.cgColor
         textField.backgroundColor = UISet.textFieldBackgroundColor
         textField.textColor = UISet.textFieldTextColor
-        errorMessagelabel.isHidden = UISet.errorMessageHidden
         timerLabel.textColor = type.timerColor
         self.isUserInteractionEnabled = UISet.isUserInteractive
         
@@ -250,7 +228,6 @@ extension GalapagosTextField_Timer{
     ///   - BorderColor : TextField의 border color 색상
     ///   - textFieldBackgroundColor : TextField의 background color 색상
     ///   - textFieldTextColor : TextField의 text  color 색상
-    ///   - errorMessageHidden : errorMessage의 hidden 여부
     ///   - isUserInteractive : TextField의 isUserInteractive
     
     
@@ -284,7 +261,6 @@ extension GalapagosTextField_Timer{
                         borderColor: SiriUIKitAsset.gray1Outline.color,
                         textFieldBackgroundColor: SiriUIKitAsset.white기본화이트.color,
                         textFieldTextColor: SiriUIKitAsset.gray1본문Body.color,
-                        errorMessageHidden: true,
                         isUserInteractive: true
                     )
                 case .focus:
@@ -292,7 +268,6 @@ extension GalapagosTextField_Timer{
                         borderColor: SiriUIKitAsset.green.color,
                         textFieldBackgroundColor: SiriUIKitAsset.white기본화이트.color,
                         textFieldTextColor: SiriUIKitAsset.gray1본문Body.color,
-                        errorMessageHidden: true,
                         isUserInteractive: true
                     )
                 case .filed:
@@ -300,7 +275,6 @@ extension GalapagosTextField_Timer{
                         borderColor: SiriUIKitAsset.gray1Outline.color,
                         textFieldBackgroundColor: SiriUIKitAsset.white기본화이트.color,
                         textFieldTextColor: SiriUIKitAsset.gray1본문Body.color,
-                        errorMessageHidden: true,
                         isUserInteractive: true
                     )
                 case .disabled:
@@ -308,7 +282,6 @@ extension GalapagosTextField_Timer{
                         borderColor: SiriUIKitAsset.gray3DisableButtonBg.color,
                         textFieldBackgroundColor: SiriUIKitAsset.gray3DisableButtonBg.color,
                         textFieldTextColor: SiriUIKitAsset.gray5DisableText2.color,
-                        errorMessageHidden: true,
                         isUserInteractive: false
                     )
                 case .error:
@@ -316,7 +289,6 @@ extension GalapagosTextField_Timer{
                         borderColor: SiriUIKitAsset.redErrorText.color,
                         textFieldBackgroundColor: SiriUIKitAsset.white기본화이트.color,
                         textFieldTextColor: SiriUIKitAsset.gray1본문Body.color,
-                        errorMessageHidden: false,
                         isUserInteractive: true
                     )
                     

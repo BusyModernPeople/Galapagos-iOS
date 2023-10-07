@@ -47,23 +47,13 @@ public final class GalapagosTextField: UIView{
         return button
     }()
     
-    private lazy var errorMessagelabel: UILabel = {
-        let label = UILabel()
-        label.text = errorMessage
-        label.textColor = SiriUIKitAsset.redErrorText.color
-        label.semanticContentAttribute = .forceLeftToRight
-        label.font = SiriUIKitFontFamily.Pretendard.regular.font(size: 12)
-        return label
-    }()
-    
     // MARK: - Properties
-    typealias TextFieldColorSet = (borderColor: UIColor, textFieldBackgroundColor: UIColor, textFieldTextColor: UIColor, errorMessageHidden: Bool, charCountHidden: Bool, clearMode: Bool, isUserInteractive: Bool)
+    typealias TextFieldColorSet = (borderColor: UIColor, textFieldBackgroundColor: UIColor, textFieldTextColor: UIColor, charCountHidden: Bool, clearMode: Bool, isUserInteractive: Bool)
     
     private var disposeBag = DisposeBag()
     
     private var placeHolder: String
     private var maxCount: Int
-    private var errorMessage: String
     
     private var keyboardType: UIKeyboardType = .emailAddress
     private var clearMode: Bool = false
@@ -86,11 +76,10 @@ public final class GalapagosTextField: UIView{
         }
     }
     
-    /// 텍스트필드의 `placeHolder`, `maxCount`, `errorMessage`를 설정합니다.
+    /// 텍스트필드의 `placeHolder`, `maxCount`를 설정합니다.
     /// - Parameters:
     ///   - placeHolder : placeHolder로 들어갈 텍스트
     ///   - maxCount : 최대 입력 가능한 글자 수 ( 0이면, 제한 없음 )
-    ///   - errorMessage : error상황에 따른 메세지 (ex: 이메일 형식이 아닙니다.)
     /// - Parameters (Optional):
     ///   - keyboardType : 키보드 타입
     ///   - clearMode : clear 버튼 On Off
@@ -101,12 +90,10 @@ public final class GalapagosTextField: UIView{
     // MARK: - Initializers
     public init(
         placeHolder: String,
-        maxCount: Int,
-        errorMessage: String
+        maxCount: Int
     ) {
         self.placeHolder = placeHolder
         self.maxCount = maxCount
-        self.errorMessage = errorMessage
         
         super.init(frame: .zero)
         
@@ -126,7 +113,6 @@ public final class GalapagosTextField: UIView{
     
     private func setAddSubView() {
         self.addSubview(textField)
-        self.addSubview(errorMessagelabel)
         self.addSubview(charCountLabel)
         self.addSubview(clearButton)
     }
@@ -149,13 +135,6 @@ public final class GalapagosTextField: UIView{
             $0.trailing.equalTo(clearButton.snp.leading).offset(-6)
             $0.height.equalTo(22)
         }
-        
-        errorMessagelabel.snp.makeConstraints {
-            $0.top.equalTo(textField.snp.bottom).offset(6)
-            $0.leading.trailing.equalTo(textField)
-            $0.height.equalTo(20)
-        }
-        
     }
     
     private func bind() {
@@ -192,7 +171,6 @@ public final class GalapagosTextField: UIView{
         textField.layer.borderColor = colorSet.borderColor.cgColor
         textField.backgroundColor = colorSet.textFieldBackgroundColor
         textField.textColor = colorSet.textFieldTextColor
-        errorMessagelabel.isHidden = colorSet.errorMessageHidden
         charCountLabel.isHidden = colorSet.charCountHidden
         clearButton.isHidden = !colorSet.clearMode
         self.isUserInteractionEnabled = colorSet.isUserInteractive
@@ -236,7 +214,6 @@ extension GalapagosTextField{
                         borderColor: SiriUIKitAsset.gray1Outline.color,
                         textFieldBackgroundColor: SiriUIKitAsset.white기본화이트.color,
                         textFieldTextColor: SiriUIKitAsset.gray1본문Body.color,
-                        errorMessageHidden: true,
                         charCountHidden: true,
                         clearMode: false,
                         isUserInteractive: true
@@ -246,7 +223,6 @@ extension GalapagosTextField{
                         borderColor: SiriUIKitAsset.green.color,
                         textFieldBackgroundColor: SiriUIKitAsset.white기본화이트.color,
                         textFieldTextColor: SiriUIKitAsset.gray1본문Body.color,
-                        errorMessageHidden: true,
                         charCountHidden: false,
                         clearMode: true,
                         isUserInteractive: true
@@ -256,7 +232,6 @@ extension GalapagosTextField{
                         borderColor: SiriUIKitAsset.gray1Outline.color,
                         textFieldBackgroundColor: SiriUIKitAsset.white기본화이트.color,
                         textFieldTextColor: SiriUIKitAsset.gray1본문Body.color,
-                        errorMessageHidden: true,
                         charCountHidden: true,
                         clearMode: true,
                         isUserInteractive: true
@@ -266,7 +241,6 @@ extension GalapagosTextField{
                         borderColor: SiriUIKitAsset.gray3DisableButtonBg.color,
                         textFieldBackgroundColor: SiriUIKitAsset.gray3DisableButtonBg.color,
                         textFieldTextColor: SiriUIKitAsset.gray5DisableText2.color,
-                        errorMessageHidden: true,
                         charCountHidden: true,
                         clearMode: false,
                         isUserInteractive: false
@@ -276,7 +250,6 @@ extension GalapagosTextField{
                         borderColor: SiriUIKitAsset.redErrorText.color,
                         textFieldBackgroundColor: SiriUIKitAsset.white기본화이트.color,
                         textFieldTextColor: SiriUIKitAsset.gray1본문Body.color,
-                        errorMessageHidden: false,
                         charCountHidden: true,
                         clearMode: true,
                         isUserInteractive: true

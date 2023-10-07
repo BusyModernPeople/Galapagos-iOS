@@ -26,8 +26,7 @@ final class CertifyCodeView: BaseView {
     public lazy var timerTextField: GalapagosTextField_Timer = {
         let textField = GalapagosTextField_Timer(
             placeHolder: "인증코드 6자리 입력",
-            maxCount: 6,
-            errorMessage: ""
+            maxCount: 6
         )
         return textField
     }()

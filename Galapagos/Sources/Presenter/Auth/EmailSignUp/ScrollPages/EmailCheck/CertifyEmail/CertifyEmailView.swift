@@ -20,8 +20,7 @@ final class CertifyEmailView: BaseView {
     public lazy var emailTextField: GalapagosTextField = {
         let textField = GalapagosTextField(
             placeHolder: "이메일을 입력해주세요",
-            maxCount: 0,
-            errorMessage: ""
+            maxCount: 0
         )
         return textField
     }()
