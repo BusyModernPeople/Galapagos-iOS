@@ -131,6 +131,7 @@ extension GalapagosErrorMessage {
         case Info
         case Error
         case Success
+        case Disabled
         case None
         
         var UISet: GalapagosErrorMessageUISet {
@@ -147,6 +148,10 @@ extension GalapagosErrorMessage {
                 case .None:
                     return (errorMessageColor: .clear,
                             accessoryImage: nil)
+                case .Disabled:
+                    return (errorMessageColor: SiriUIKitAsset.gray5DisableText2.color,
+                            accessoryImage: SiriUIKitAsset._16x16checkDefault.image)
+                    
             }
         }
     }
