@@ -28,3 +28,14 @@ enum PasswordValidate {
         }
     }
 }
+
+enum NicknameValidate {
+    case LengthRegex
+    
+    var validate: String {
+        switch self {
+        case .LengthRegex:
+            return "^.{2,6}$"
+        }
+    }
+}

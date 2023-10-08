@@ -46,7 +46,10 @@ class EmailSignUpViewController: BaseViewController {
     }()
     
     private lazy var nicknameCheckView: NicknameCheckView = {
-        let view = NicknameCheckView(frame: .zero, viewModel: viewModel)
+        let view = NicknameCheckView(
+            parentViewModel: viewModel,
+            viewModel: NicknameCheckViewModel()
+        )
         return view
     }()
     

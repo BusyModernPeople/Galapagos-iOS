@@ -34,35 +34,26 @@ final class NicknameCheckView: UIView {
         return textField
     }()
     
-    private lazy var nicknameErrorCell: TextFieldErrorCell = {
-        let cell = TextFieldErrorCell(errorMessage: "너무 재미있고 독특한 이름이네요!")
-        cell.changeState(state: .success)
-        cell.isHidden = true
-        return cell
+    private lazy var nicknameErrorCell: GalapagosErrorMessage = {
+        let errorMessage = GalapagosErrorMessage(title: "", type: .None)
+        return errorMessage
     }()
     
-    
-    
-    
     // MARK: - Properties
-    
-    private let viewModel: EmailSignUpViewModel
+    private let parentViewModel: EmailSignUpViewModel
+    private let viewModel: NicknameCheckViewModel
     private let disposeBag = DisposeBag()
-    
-    private let nicknameCertificate = BehaviorRelay<Bool>(value: false)
-    
-    
-    
     
     
     // MARK: - Initializers
     
-    init(
-        frame: CGRect,
-        viewModel: EmailSignUpViewModel
+    public init(
+        parentViewModel: EmailSignUpViewModel,
+        viewModel: NicknameCheckViewModel
     ) {
+        self.parentViewModel = parentViewModel
         self.viewModel = viewModel
-        super.init(frame: frame)
+        super.init(frame: .zero)
         addViews()
         setConstraints()
         bind()
@@ -104,46 +95,27 @@ final class NicknameCheckView: UIView {
     }
     
     private func bind() {
+        let input = NicknameCheckViewModel.Input(
+            nickname: nickNameTextField.rx.text.orEmpty.asObservable()
+        )
         
-        // TODO: 입력을 마치고 나서 확인을 누르면, 서버에서 닉네임 중복 확인. (usecase)
-        nickNameTextField.rx.controlEvent(.editingDidEnd)
+        let output = viewModel.transform(input: input)
+        
+        output.certifyNickname
             .withUnretained(self)
-            .subscribe(onNext: { owner, _ in
-                guard let text = owner.nickNameTextField.text else { return }
-                owner.checkPasswordLengthValidation(password: text)
-            })
-            .disposed(by: disposeBag)
-        
-        nickNameTextField.rx.controlEvent(.editingDidBegin)
-            .withUnretained(self)
-            .subscribe(onNext: { owner, _ in
-                owner.checkPasswordLengthValidation(password: "")
-            })
-            .disposed(by: disposeBag)
-        
-        nicknameCertificate
-            .asDriver(onErrorJustReturn: false)
-            .distinctUntilChanged()
-            .drive(onNext: { [weak self] isValidated in
-                guard let self = self else { return }
-                self.viewModel.readyForNextButton.accept(isValidated)
-                self.nicknameErrorCell.isHidden = !isValidated
-            })
-            .disposed(by: disposeBag)
-        
-    }
-    
-    //닉네임이 2자~6자인지 확인해서 Observable<Bool>타입으로 반환해주는 함수
-    private func checkPasswordLengthValidation(password: String) {
-        Observable.just(password.count >= 2 && password.count <= 6)
-            .distinctUntilChanged()
-            .asDriver(onErrorJustReturn: false)
-            .drive(onNext: { [weak self] isValidated in
-                guard let self = self else { return }
-                self.nicknameCertificate.accept(isValidated)
+            .subscribe(onNext: { owner, result in
+                owner.parentViewModel.readyForNextButton.accept(result)
+                if result {
+                    owner.nicknameErrorCell.rxType.accept(.Success)
+                    owner.nicknameErrorCell.setErrorMessage(message: "재미있고 독특한 이름이네요!")
+                } else {
+                    owner.nicknameErrorCell.rxType.accept(.Info)
+                    owner.nicknameErrorCell.setErrorMessage(message: "2-6자리로 입력해주세요")
+                }
             })
             .disposed(by: disposeBag)
     }
+    
 }
 
 // MARK: - Extension

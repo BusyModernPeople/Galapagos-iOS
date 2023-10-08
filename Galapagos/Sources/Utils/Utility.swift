@@ -39,4 +39,12 @@ class Utility {
             return passwordTest.evaluate(with: password)
         }
     }
+    
+    static func checkNicknameValidation(nickname: Observable<String>, validate: NicknameValidate) -> Observable<Bool> {
+        let nicknameTest = NSPredicate(format: "SELF MATCHES %@", validate.validate)
+        return nickname.map { nickname in
+            return nicknameTest.evaluate(with: nickname)
+        }
+    }
+    
 }
