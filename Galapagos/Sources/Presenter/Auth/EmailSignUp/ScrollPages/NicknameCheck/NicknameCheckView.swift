@@ -139,6 +139,16 @@ final class NicknameCheckView: UIView {
                 owner.parentViewModel.letsGoSignUp.accept(true)
             })
             .disposed(by: disposeBag)
+        
+        
+        nickNameTextField.rx.text.orEmpty
+            .asDriver()
+            .drive(onNext: { [weak self] nickname in
+                guard let self = self else { return }
+                self.parentViewModel.nickname.accept(nickname)
+                self.parentViewModel.socialType.accept("EMAIL")
+            })
+            .disposed(by: disposeBag)
     }
     
 }

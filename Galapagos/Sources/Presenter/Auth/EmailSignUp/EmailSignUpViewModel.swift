@@ -61,8 +61,9 @@ class EmailSignUpViewModel: ViewModelType{
             })
             .disposed(by: disposeBag)
         
-        let signupBody = Observable.combineLatest(email, password, nickname, socialType)
-            .map{ SignUpBody(email: $0, 
+        let signupBody = Observable
+            .combineLatest(email, password, nickname, socialType)
+            .map{ SignUpBody(email: $0,
                              password: $1,
                              nickName: $2,
                              socialType: $3

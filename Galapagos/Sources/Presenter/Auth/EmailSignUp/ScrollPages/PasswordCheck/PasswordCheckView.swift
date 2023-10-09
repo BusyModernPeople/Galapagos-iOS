@@ -240,6 +240,13 @@ final class PasswordCheckView: UIView {
             })
             .disposed(by: disposeBag)
         
+        passwordCheckTextField.rx.text.orEmpty
+            .asDriver()
+            .drive(onNext: { [weak self] password in
+                guard let self = self else { return }
+                self.parentViewModel.password.accept(password)
+            })
+            .disposed(by: disposeBag)
     }
 }
 

@@ -153,6 +153,14 @@ final class EmailCheckView: UIView {
                 }
             })
             .disposed(by: disposeBag)
+        
+        certifyEmailView.emailTextField.rx.text.orEmpty
+            .asDriver()
+            .drive(onNext: { [weak self] email in
+                guard let self = self else { return }
+                self.parentViewModel.email.accept(email)
+            })
+            .disposed(by: disposeBag)
     }
 }
 
