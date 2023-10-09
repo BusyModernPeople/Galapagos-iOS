@@ -39,6 +39,16 @@ final class NicknameCheckView: UIView {
         return errorMessage
     }()
     
+    private lazy var completeSignUpButton: GalapagosButton = {
+        let button = GalapagosButton(
+            isRound: false,
+            iconTitle: nil,
+            type: .Usage(.Disabled),
+            title: "가입 완료"
+        )
+        return button
+    }()
+    
     // MARK: - Properties
     private let parentViewModel: EmailSignUpViewModel
     private let viewModel: NicknameCheckViewModel
@@ -92,11 +102,19 @@ final class NicknameCheckView: UIView {
             $0.height.equalTo(20)
         }
         
+        completeSignUpButton.snp.makeConstraints{ nextButton in
+            nextButton.centerX.equalToSuperview()
+            nextButton.width.equalToSuperview().multipliedBy(0.9)
+            nextButton.bottom.equalToSuperview().inset(50)
+            nextButton.height.equalTo(56)
+        }
+        
     }
     
     private func bind() {
         let input = NicknameCheckViewModel.Input(
-            nickname: nickNameTextField.rx.text.orEmpty.asObservable()
+            nickname: nickNameTextField.rx.text.orEmpty.asObservable(),
+            completeBtnTapped: completeSignUpButton.rx.tap.asObservable()
         )
         
         let output = viewModel.transform(input: input)
@@ -112,6 +130,13 @@ final class NicknameCheckView: UIView {
                     owner.nicknameErrorCell.rxType.accept(.Info)
                     owner.nicknameErrorCell.setErrorMessage(message: "2-6자리로 입력해주세요")
                 }
+            })
+            .disposed(by: disposeBag)
+        
+        output.letsSignUp
+            .withUnretained(self)
+            .subscribe(onNext: { owner, _ in
+                owner.parentViewModel.letsGoSignUp.accept(true)
             })
             .disposed(by: disposeBag)
     }
