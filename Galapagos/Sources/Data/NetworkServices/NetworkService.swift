@@ -28,15 +28,16 @@ final class DefaultNetworkService: NetworkService {
             .map { ($0.response, $0.data) }
     }
     
-    func request<T: Decodable>(_ endpoint: Endpoint, decodeTo type: T.Type) -> Single<T> {
+    func request(_ endpoint: Endpoint) -> Single<Data> {
         return self.request(endpoint)
-            .flatMap { response, data -> Observable<T> in
+            .flatMap { response, data -> Observable<Data> in
                 if response.statusCode == 200 {
-                    if let model = Utility.decode(T.self, from: data) {
-                        return .just(model)
-                    } else {
-                        return .error(NetworkError.decodingFailed)
-                    }
+//                    if let model = Utility.decode(T.self, from: data) {
+//                        return .just(model)
+//                    } else {
+//                        return .error(NetworkError.decodingFailed)
+//                    }
+                    return .just(data)
                 } else {
                     let errorData = Utility.decodeError(from: data)
                     return .error(NetworkError.customError(code: errorData.errorCode, message: errorData.errorMessages))

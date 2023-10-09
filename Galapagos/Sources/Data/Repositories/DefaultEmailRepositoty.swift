@@ -17,14 +17,14 @@ final class DefaultEmailRepository: EmailRepository {
         self.networkService = DefaultNetworkService()
     }
     
-    func sendCodeWithEmail(body: SendCodeWithEmailBody) -> Single<CertifyCodeModel> {
+    func sendCodeWithEmail(body: SendCodeWithEmailBody) -> Single<Data> {
         let endpoint = EmailEndpoint.sendCodeWithEmail(body: body)
-        return networkService.request(endpoint, decodeTo: CertifyCodeModel.self)
+        return networkService.request(endpoint)
     }
 
-    func sendCertifyCode(body: CertifyCodeBody) -> Single<CertifyCodeResultModel> {
+    func sendCertifyCode(body: CertifyCodeBody) -> Single<Data> {
         let endpoint = EmailEndpoint.certifyCode(body: body)
-        return networkService.request(endpoint, decodeTo: CertifyCodeResultModel.self)
+        return networkService.request(endpoint)
     }
 
 

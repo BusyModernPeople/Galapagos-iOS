@@ -14,5 +14,5 @@ protocol NetworkService {
     
     // MARK: - Methods
     func request(_ endpoint: Endpoint) -> Observable<(HTTPURLResponse, Data)>
-    func request<T: Decodable>(_ endpoint: Endpoint, decodeTo type: T.Type) -> Single<T>
+    func request(_ endpoint: Endpoint) -> Single<Data>
 }

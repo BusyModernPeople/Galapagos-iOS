@@ -9,7 +9,7 @@
 import Foundation
 
 enum UserEndpoint: Endpoint {
-    case SignUp(body: SignUpBody)
+    case SignUp(body: UserSignUpBody)
     
     var baseURL: URL? {
         return URL(string: "http://3.34.8.109:3040/users")

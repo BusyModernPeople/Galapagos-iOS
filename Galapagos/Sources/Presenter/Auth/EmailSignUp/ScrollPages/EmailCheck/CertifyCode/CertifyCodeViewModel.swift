@@ -44,27 +44,36 @@ final class CertifyCodeViewModel: ViewModelType {
                 guard let self = self else { return .just("Error") }
                 let body = CertifyCodeBody(email: email, code: code)
                 return self.usecase.sendCertifyCode(body: body)
-                    .do(onSuccess: { _ in
-                        certifyResult.accept(true)
-                    }, onError: { _ in
-                        certifyResult.accept(false)
-                    })
+                    .map { $0.message } // Assuming message is a property of CertifyCodeResultModel
                     .catch { error in
                         return Single.just("\(error.localizedDescription)")
                     }
             }
             .share()
             .asObservable()
-        
+
         let resendEmailMessage = input.reSendEmailTapped
-            .debug()
             .withLatestFrom(input.email)
-            .withUnretained(self)
-            .flatMapLatest{ owner, email -> Observable<String> in
+            .flatMapLatest { [weak self] email -> Observable<String> in
+                guard let self = self else { return .empty() }
                 let body = SendCodeWithEmailBody(email: email)
-                return owner.usecase.sendCodeWithEmail(body: body)
+                return self.usecase.sendCodeWithEmail(body: body)
+                    .map { $0.message }
+                    .catch { error in
+                        return Single.just("\(error.localizedDescription)")
+                    }
                     .asObservable()
             }
+
+        
+        certifyMessage
+            .subscribe(onNext: { message in
+                certifyResult.accept(true)
+            }, onError: { error in
+                certifyResult.accept(false)
+            })
+            .disposed(by: disposeBag)
+
 
         return Output(receivedMessage: certifyMessage,
                       resendEmailMessage: resendEmailMessage,

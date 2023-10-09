@@ -36,8 +36,9 @@ final class CertifyEmailViewModel: ViewModelType {
             .withLatestFrom(input.email)
             .withUnretained(self)
             .flatMapLatest{ owner, email -> Observable<String> in
-                let body = SendCodeWithEmailBody(email: email)  /// 뷰모델에서부터 body를 완성해서 넘겨주는게 맞는걸까....?
+                let body = SendCodeWithEmailBody(email: email)
                 return owner.usecase.sendCodeWithEmail(body: body)
+                    .map { $0.message }
                     .asObservable()
             }
         

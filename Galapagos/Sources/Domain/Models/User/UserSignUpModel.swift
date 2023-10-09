@@ -1,5 +1,5 @@
 //
-//  SignUpBody.swift
+//  UserSignUpModel.swift
 //  Galapagos
 //
 //  Created by Siri on 2023/10/10.
@@ -8,9 +8,7 @@
 
 import Foundation
 
-struct SignUpBody: Codable {
-    let email: String
-    let password: String
+struct UserSignUpModel: Codable {
     let nickName: String
-    let socialType: String
+    let jwt: String
 }
