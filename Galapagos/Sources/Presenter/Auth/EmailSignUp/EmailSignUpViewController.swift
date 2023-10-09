@@ -137,7 +137,7 @@ class EmailSignUpViewController: BaseViewController {
     private func setBind() {
         let input = EmailSignUpViewModel.Input(
             backButtonTapped: navigationBar.backButton.rx.tap.asSignal(),
-            nextButtonTapped: nextButton.rx.tapGesture().when(.recognized).map{ _ in }.asObservable()
+            nextButtonTapped: nextButton.rx.tap.asObservable()
         )
         
         let output = viewModel.transform(input: input)
@@ -146,6 +146,7 @@ class EmailSignUpViewController: BaseViewController {
             .subscribe(onNext: { [weak self] next in
                 guard let self = self else { return }
                 self.galapagosPager.nextPage(animated: true, next: CGFloat(next))
+                self.nextButton.isHidden = next >= 3
             })
             .disposed(by: disposeBag)
         
