@@ -44,7 +44,12 @@ final class CertifyCodeViewModel: ViewModelType {
                 guard let self = self else { return .just("Error") }
                 let body = CertifyCodeBody(email: email, code: code)
                 return self.usecase.sendCertifyCode(body: body)
-                    .map { $0.message } // Assuming message is a property of CertifyCodeResultModel
+                    .do(onSuccess: { resultModel in
+                        certifyResult.accept(true)
+                    }, onError: { error in
+                        certifyResult.accept(false)
+                    })
+                    .map { $0.message }
                     .catch { error in
                         return Single.just("\(error.localizedDescription)")
                     }
@@ -64,17 +69,7 @@ final class CertifyCodeViewModel: ViewModelType {
                     }
                     .asObservable()
             }
-
         
-        certifyMessage
-            .subscribe(onNext: { message in
-                certifyResult.accept(true)
-            }, onError: { error in
-                certifyResult.accept(false)
-            })
-            .disposed(by: disposeBag)
-
-
         return Output(receivedMessage: certifyMessage,
                       resendEmailMessage: resendEmailMessage,
                       resultOfCertify: certifyResult.asObservable()

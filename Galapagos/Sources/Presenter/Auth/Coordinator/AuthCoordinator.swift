@@ -56,8 +56,10 @@ class AuthCoordinator: Coordinator {
         case .EmailSignUp:
           let emailSignUpViewController = EmailSignUpViewController(
             viewModel: EmailSignUpViewModel(
-              /// 여기에 나중에는 useCase도 추가 되어야겠지
-              coordinator: self
+              coordinator: self,
+              userSignUpUsecase: DefaultUserSignUpUsecase(
+                userRepository: DefaultUserRepository()
+              )
             )
           )
           if self.navigationController.viewControllers.contains(where: {$0 is EmailSignUpViewController}) {

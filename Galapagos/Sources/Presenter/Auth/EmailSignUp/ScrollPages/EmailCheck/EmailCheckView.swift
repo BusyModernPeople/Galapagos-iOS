@@ -31,7 +31,7 @@ final class EmailCheckView: UIView {
         let view = CertifyEmailView(
             viewModel: CertifyEmailViewModel(
                 usecase: DefaultCertifyCodeWithEmailUsecase(
-                    authRepository: DefaultEmailRepository()
+                    emailRepository: DefaultEmailRepository()
                 )
             ),
             parentViewModel: viewModel
@@ -43,7 +43,7 @@ final class EmailCheckView: UIView {
         let view = CertifyCodeView(
             viewModel: CertifyCodeViewModel(
                 usecase: DefaultCertifyCodeWithEmailUsecase(
-                    authRepository: DefaultEmailRepository()
+                    emailRepository: DefaultEmailRepository()
                 )
             ),
             parentViewModel: viewModel

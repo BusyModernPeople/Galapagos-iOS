@@ -13,8 +13,8 @@ final class DefaultUserSignUpUsecase: UserSignUpUsecase {
     
     private let userRepository: UserRepository
     
-    init() {
-        self.userRepository = DefaultUserRepository()
+    init(userRepository: UserRepository) {
+        self.userRepository = userRepository
     }
     
     func userSignUp(body: UserSignUpBody) -> Single<UserSignUpModel> {

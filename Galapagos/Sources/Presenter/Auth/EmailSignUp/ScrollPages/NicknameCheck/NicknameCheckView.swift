@@ -79,7 +79,8 @@ final class NicknameCheckView: UIView {
         addSubviews([
             titleLabel,
             nickNameTextField,
-            nicknameErrorCell
+            nicknameErrorCell,
+            completeSignUpButton
         ])
     }
     
@@ -126,9 +127,11 @@ final class NicknameCheckView: UIView {
                 if result {
                     owner.nicknameErrorCell.rxType.accept(.Success)
                     owner.nicknameErrorCell.setErrorMessage(message: "재미있고 독특한 이름이네요!")
+                    owner.completeSignUpButton.rxType.accept(.Usage(.Inactive))
                 } else {
                     owner.nicknameErrorCell.rxType.accept(.Info)
                     owner.nicknameErrorCell.setErrorMessage(message: "2-6자리로 입력해주세요")
+                    owner.completeSignUpButton.rxType.accept(.Usage(.Disabled))
                 }
             })
             .disposed(by: disposeBag)
