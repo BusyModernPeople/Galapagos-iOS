@@ -15,11 +15,13 @@ import RxCocoa
 final class NicknameCheckViewModel: ViewModelType {
     struct Input {
         let nickname: Observable<String>
+        let completeBtnTapped: Observable<Void>
     }
     
     struct Output {
         let certifyNickname: Observable<Bool>
 //        let errorMessage: Observable<String>
+        let letsSignUp: Observable<Void>
     }
     
     var disposeBag: DisposeBag = DisposeBag()
@@ -29,7 +31,8 @@ final class NicknameCheckViewModel: ViewModelType {
         
         
         return Output(
-            certifyNickname: certifyResult
+            certifyNickname: certifyResult,
+            letsSignUp: input.completeBtnTapped
         )
     }
 }

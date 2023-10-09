@@ -29,6 +29,7 @@ class EmailSignUpViewModel: ViewModelType{
     weak var coordinator: AuthCoordinator?
     
     var readyForNextButton = BehaviorRelay<Bool>(value: false)
+    var letsGoSignUp = BehaviorRelay<Bool>(value: false)
     
     // MARK: - Initializers
     init(
@@ -54,6 +55,17 @@ class EmailSignUpViewModel: ViewModelType{
                 self.readyForNextButton.accept(false)
             })
             .disposed(by: disposeBag)
+        
+        
+        //TODO: 여기서, 회원가입 진행하자!
+//        letsGoSignUp
+//            .subscribe(onNext: { [weak self] in
+//                guard let self = self else {return}
+//            })
+//            .disposed(by: disposeBag)
+        
+        
+        
         
         let scrollTo = input.nextButtonTapped
             .asObservable()
