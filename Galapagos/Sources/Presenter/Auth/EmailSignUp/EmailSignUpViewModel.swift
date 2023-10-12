@@ -18,13 +18,12 @@ import UIKit
 class EmailSignUpViewModel: ViewModelType{
 	
 	struct Input {
-		let backButtonTapped: Signal<Void>
+		let backButtonTapped: Observable<Void>
 		let nextButtonTapped: Observable<Void>
+		let nowPage: Observable<Int>
 	}
 	
 	struct Output {
-		let scrollTo: Observable<Int>
-		let backScrollTo: Observable<Int>
 		let readyForNextButton: Observable<Bool>
 	}
 	
@@ -34,8 +33,9 @@ class EmailSignUpViewModel: ViewModelType{
 	var disposeBag: DisposeBag = DisposeBag()
 	weak var coordinator: AuthCoordinator?
 	
-	var readyForNextButton = BehaviorRelay<Bool>(value: false)
-	var letsGoSignUp = BehaviorRelay<Bool>(value: false)
+	let didTapBackButton = PublishSubject<Void>()
+	let readyForNextButton = BehaviorRelay<Bool>(value: false)
+	let letsGoSignUp = BehaviorRelay<Bool>(value: false)
 	
 	var email = BehaviorRelay<String>(value: "")
 	var password = BehaviorRelay<String>(value: "")
@@ -54,18 +54,23 @@ class EmailSignUpViewModel: ViewModelType{
 	// MARK: - Methods
 	func transform(input: Input) -> Output {
 		
-		input.backButtonTapped
-			.asObservable()
-			.subscribe(onNext: { [weak self] in
-				guard let self = self else {return}
-				self.readyForNextButton.accept(true)
+		input.nextButtonTapped
+			.withUnretained(self)
+			.subscribe(onNext: { owner, _ in
+				owner.readyForNextButton.accept(false)
 			})
 			.disposed(by: disposeBag)
-		
-		input.nextButtonTapped
-			.subscribe(onNext: { [weak self] in
-				guard let self = self else {return}
-				self.readyForNextButton.accept(false)
+
+		input.backButtonTapped
+			.withLatestFrom(input.nowPage.distinctUntilChanged())
+			.withUnretained(self)
+			.subscribe(onNext: { owner, currentPage in
+				print("🍎현재 페이지: \(currentPage)🍎")
+				if currentPage == 0 {
+					owner.coordinator?.userActionState.accept(.signIn)
+				} else {
+					owner.readyForNextButton.accept(true)
+				}
 			})
 			.disposed(by: disposeBag)
 		
@@ -78,10 +83,16 @@ class EmailSignUpViewModel: ViewModelType{
 		// TODO: - 회원가입 성공 시, JWT 토큰을 UserDefaults에 저장해야함. -> Manager 따로 만들어주기
 		
 		letsGoSignUp
-			.withLatestFrom(signupBody)
 			.withUnretained(self)
-			.flatMapLatest { owner, body in
-				owner.userSignUpUsecase.userSignUp(body: body)
+			.filter { $0.1 == true }
+			.flatMapLatest { owner, _ in
+				signupBody
+			}
+			.flatMapLatest { [unowned self] body in
+				return self.userSignUpUsecase.userSignUp(body: body)
+					.catch { error in
+						return .error(error)
+					}
 			}
 			.subscribe(onNext: { model in
 				UserDefaults.standard.setValue(model.jwt, forKey: "JWT")
@@ -89,20 +100,7 @@ class EmailSignUpViewModel: ViewModelType{
 			})
 			.disposed(by: disposeBag)
 		
-		
-		
-		
-		let scrollTo = input.nextButtonTapped
-			.asObservable()
-			.map{ return 1 }
-		
-		let backScrollTo = input.backButtonTapped
-			.asObservable()
-			.map{ return 1 }
-		
 		return Output(
-			scrollTo: scrollTo,
-			backScrollTo: backScrollTo,
 			readyForNextButton: readyForNextButton.asObservable()
 		)
 	}

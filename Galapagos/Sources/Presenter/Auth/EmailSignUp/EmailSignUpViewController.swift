@@ -136,27 +136,24 @@ class EmailSignUpViewController: BaseViewController {
 	
 	private func setBind() {
 		let input = EmailSignUpViewModel.Input(
-			backButtonTapped: navigationBar.backButton.rx.tap.asSignal(),
-			nextButtonTapped: nextButton.rx.tap.asObservable()
+			backButtonTapped: navigationBar.backButton.rx.tap.asObservable(),
+			nextButtonTapped: nextButton.rx.tap.asObservable(),
+			nowPage: galapagosPager.getCurrentPage()
 		)
 		
 		let output = viewModel.transform(input: input)
-		
-		output.scrollTo
-			.subscribe(onNext: { [weak self] next in
-				guard let self = self else { return }
-				self.galapagosPager.nextPage(animated: true, next: CGFloat(next))
+				
+		nextButton.rx.tap
+			.withUnretained(self)
+			.subscribe(onNext: { owner, _ in
+				owner.galapagosPager.nextPage()
 			})
 			.disposed(by: disposeBag)
 		
-		output.backScrollTo
+		navigationBar.backButton.rx.tap
 			.withUnretained(self)
-			.subscribe(onNext: { owner, previus in
-				if owner.galapagosPager.getCurrentPage() == 0 {
-					owner.viewModel.coordinator?.userActionState.accept(.signIn)
-				} else {
-					owner.galapagosPager.previousPage(animated: true, previous: CGFloat(previus))
-				}
+			.subscribe(onNext: { owner, _ in
+				owner.galapagosPager.previousPage()
 			})
 			.disposed(by: disposeBag)
 		
