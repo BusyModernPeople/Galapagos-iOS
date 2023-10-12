@@ -30,13 +30,17 @@ public final class GalapagosProgressPager: UIView {
 		scrollView.isPagingEnabled = true
 		scrollView.isScrollEnabled = false
 		scrollView.showsHorizontalScrollIndicator = false
+		
 		return scrollView
 	}()
 	
 	// MARK: - Properties
-	public var pagesCount: Int
 	
-	fileprivate var pages: [UIView] = []
+	private let disposeBag = DisposeBag()
+	private let currentPage = BehaviorRelay(value: 0)
+	
+	private var pages: [UIView] = []
+	private var pagesCount: Int
 	
 	// MARK: - Initializers
 	public init(
@@ -48,6 +52,7 @@ public final class GalapagosProgressPager: UIView {
 		super.init(frame: .zero)
 		setAddSubView()
 		setConstraint()
+		bind()
 	}
 	
 	required init?(coder: NSCoder) {
@@ -93,38 +98,38 @@ public final class GalapagosProgressPager: UIView {
 		}
 	}
 	
-	public func nextPage(animated: Bool, next: CGFloat) {
-		let nextXPoint: CGFloat = CGFloat(getCurrentPage()) + next
-		let nextPoint = CGPoint(x: nextXPoint * self.frame.size.width, y: 0)
-		pagerScrollView.setContentOffset(nextPoint, animated: animated)
-		setNextProgress(animated: animated)
+	private func bind() {
+		currentPage.asObservable()
+			.map { Float($0) / Float(self.pagesCount - 1) }
+			.withUnretained(self)
+			.subscribe(onNext: { owner, progress in
+				progress == 0
+				? owner.progressView.setProgress(0.02, animated: true)
+				: owner.progressView.setProgress(progress, animated: true)
+			})
+			.disposed(by: disposeBag)
+		
+		currentPage.asObservable()
+			.subscribe(onNext: { [weak self] page in
+				guard let self = self else { return }
+				let xOffset = CGFloat(page) * self.frame.size.width
+				self.pagerScrollView.setContentOffset(CGPoint(x: xOffset, y: 0), animated: true)
+			})
+			.disposed(by: disposeBag)
+		
 	}
 	
-	public func previousPage(animated: Bool, previous: CGFloat) {
-		let previousXPoint: CGFloat = CGFloat(getCurrentPage()) - previous
-		let previousPoint = CGPoint(x: previousXPoint * self.frame.size.width, y: 0)
-		pagerScrollView.setContentOffset(previousPoint, animated: animated)
-		setPreviousProgress(animated: animated)
+	public func nextPage() {
+		currentPage.accept(currentPage.value + 1)
+		print("넥스트 페이지: \(currentPage.value)")
 	}
 	
-	public func setNextProgress(animated: Bool) {
-		let progress = Float(getCurrentPage() + 1) / Float(pagesCount - 1)
-		progressView.setProgress(progress, animated: animated)
+	public func previousPage() {
+		currentPage.accept(currentPage.value - 1)
 	}
 	
-	public func setPreviousProgress(animated: Bool) {
-		var progress = Float(0.0)
-		if getCurrentPage() == 1 {
-			progress = 0.02
-		} else {
-			progress = Float(getCurrentPage() - 1) / Float(pagesCount - 1)
-		}
-		progressView.setProgress(progress, animated: animated)
-	}
-	
-	public func getCurrentPage() -> Int {
-		let page = Int(pagerScrollView.contentOffset.x / self.frame.size.width)
-		return page
+	public func getCurrentPage() -> Observable<Int> {
+		return currentPage.asObservable()
 	}
 	
 }
