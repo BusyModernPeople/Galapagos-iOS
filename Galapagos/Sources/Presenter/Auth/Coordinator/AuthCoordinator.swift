@@ -6,22 +6,24 @@
 //  Copyright © 2023 com.busyModernPeople. All rights reserved.
 //
 
-import UIKit
-import RxSwift
 import RxCocoa
+import RxSwift
+import UIKit
 
 class AuthCoordinator: Coordinator {
-  //MARK: - Navigation DEPTH 1 -
+  // MARK: - Navigation DEPTH 1 -
   enum AuthCoordinatorChild{
-    case SignIn, EmailSignUp, EmailSignIn
+    case signIn
+    case emailSignUp
+    case emailSignIn
     /// SignIn이 AuthHome의 역할
   }
   
-  //MARK: - Need To Initializing
+  // MARK: - Need To Initializing
   var disposeBag: DisposeBag
   var navigationController: UINavigationController
   
-  //MARK: - Don't Need To Initializing
+  // MARK: - Don't Need To Initializing
   var childCoordinators: [Coordinator] = []
   var delegate: CoordinatorDelegate?
   var userActionState: PublishRelay<AuthCoordinatorChild> = PublishRelay()
@@ -40,7 +42,7 @@ class AuthCoordinator: Coordinator {
       .subscribe(onNext: { [weak self] state in
         guard let self = self else {return}
         switch state{
-        case .SignIn:
+        case .signIn:
           let signInViewController = SignInViewController(
             viewModel: SignInViewModel(
               /// 여기에 나중에는 useCase도 추가 되어야겠지
@@ -53,11 +55,13 @@ class AuthCoordinator: Coordinator {
           }else {
             self.pushViewController(viewController: signInViewController)
           }
-        case .EmailSignUp:
+        case .emailSignUp:
           let emailSignUpViewController = EmailSignUpViewController(
             viewModel: EmailSignUpViewModel(
-              /// 여기에 나중에는 useCase도 추가 되어야겠지
-              coordinator: self
+              coordinator: self,
+              userSignUpUsecase: DefaultUserSignUpUsecase(
+                userRepository: DefaultUserRepository()
+              )
             )
           )
           if self.navigationController.viewControllers.contains(where: {$0 is EmailSignUpViewController}) {
@@ -65,7 +69,7 @@ class AuthCoordinator: Coordinator {
           }else {
             self.pushViewController(viewController: emailSignUpViewController)
           }
-        case .EmailSignIn:
+        case .emailSignIn:
           let emailSignInViewController = EmailSignInViewController(
             viewModel: EmailSignInViewModel(
               /// 여기에 나중에는 useCase도 추가 되어야겠지
@@ -83,7 +87,7 @@ class AuthCoordinator: Coordinator {
   }
   
   func start() {
-    self.userActionState.accept(.SignIn)
+    self.userActionState.accept(.signIn)
   }
   
 }

@@ -6,10 +6,9 @@
 //  Copyright © 2023 com.busyModernPeople. All rights reserved.
 //
 
-import UIKit
-
-import RxSwift
 import RxRelay
+import RxSwift
+import UIKit
 
 class AddDiaryCoordinator: Coordinator {
   var navigationController: UINavigationController
@@ -37,7 +36,3 @@ class AddDiaryCoordinator: Coordinator {
     self.pushViewController(viewController: addDiaryViewController)
   }
 }
-
-
-
-

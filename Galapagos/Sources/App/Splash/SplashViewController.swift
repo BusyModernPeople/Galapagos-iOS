@@ -6,9 +6,9 @@
 //  Copyright © 2023 com.busyModernPeople. All rights reserved.
 //
 
-import UIKit
-import Then
 import SnapKit
+import Then
+import UIKit
 
 class SplashViewController: BaseViewController {
   
@@ -23,7 +23,7 @@ class SplashViewController: BaseViewController {
   
   override func viewDidLoad() {
     super.viewDidLoad()
-    viewModel.CheckAutoSignIn()
+    viewModel.checkAutoSignIn()
   }
   
   override func setConstraint() {

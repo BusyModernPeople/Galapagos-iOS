@@ -6,28 +6,29 @@
 //  Copyright © 2023 com.busyModernPeople. All rights reserved.
 //
 
-import UIKit
 import RxSwift
+import UIKit
+
 
 class EmailSignInViewModel: ViewModelType{
-  
-  struct Input {}
-  
-  struct Output {}
-  
-  var disposeBag: DisposeBag = DisposeBag()
-  weak var coordinator: AuthCoordinator?
-  
-  init(
-    coordinator: AuthCoordinator
-  ) {
-    self.coordinator = coordinator
-  }
-  
-  
-  func transform(input: Input) -> Output {
-    return Output()
-  }
-  
-  
+	
+	struct Input {}
+	
+	struct Output {}
+	
+	var disposeBag: DisposeBag = DisposeBag()
+	weak var coordinator: AuthCoordinator?
+	
+	init(
+		coordinator: AuthCoordinator
+	) {
+		self.coordinator = coordinator
+	}
+	
+	
+	func transform(input: Input) -> Output {
+		return Output()
+	}
+	
+	
 }

@@ -6,11 +6,10 @@
 //  Copyright © 2023 com.busyModernPeople. All rights reserved.
 //
 
-import UIKit
-
-import SnapKit
-import SiriUIKit
 import RxCocoa
+import SiriUIKit
+import SnapKit
+import UIKit
 
 final class MainViewController: BaseViewController {
   
@@ -58,6 +57,7 @@ final class MainViewController: BaseViewController {
   // MARK: - Initializers
   
   init(viewModel: MainViewModel) {
+    print("🔥 MainViewController")
     self.viewModel = viewModel
     super.init()
   }
@@ -94,7 +94,11 @@ final class MainViewController: BaseViewController {
     contentView.snp.makeConstraints { make in
       make.edges.equalToSuperview()
       make.width.equalToSuperview()
-      make.height.greaterThanOrEqualTo(view.safeAreaLayoutGuide).offset(60).priority(.low)//탭바 아이템 위치를 못 잡아서 기기마다 스크롤 최하단 위치 다른 문제 발생
+      make.height.greaterThanOrEqualTo(
+        view.safeAreaLayoutGuide
+      )
+      .offset(60)
+      .priority(.low) // 탭바 아이템 위치를 못 잡아서 기기마다 스크롤 최하단 위치 다른 문제 발생
     }
     
     animalContainerView.snp.makeConstraints { make in
@@ -116,7 +120,7 @@ final class MainViewController: BaseViewController {
   
   private func showViewBasedOnHasMain(_ hasMainAnimal: Bool) {
     if hasMainAnimal {
-      mainAnimalView = MainAnimalView(name: "도랭이", days: String(111))//임시 입력 값
+      mainAnimalView = MainAnimalView(name: "도랭이", days: String(111)) // 임시 입력 값
       guard let mainAnimalView = mainAnimalView else { return }
       animalContainerView.addSubview(mainAnimalView)
       self.mainAnimalViewConstraint()
@@ -171,27 +175,26 @@ final class MainViewController: BaseViewController {
   }
   
   override func bind() {
-//    let input = MainViewModel.Input(
-//      addAnimalButtonTapped: emptyMainAnimalView.addAnimalButton.rx.tap.asSignal(),
-//      moveCommunityTapped: emptyStarCommunityView.moveCommunityTabButton.rx.tap.asSignal(),
-//      moveMainAnimalDiaryTapped: moveMainAnimalDiaryTappedEvent.asSignal()
-//        //button2TappedEvent.asSignal()
-//    )
-//    
-//    let output = viewModel.transform(input: input)
-//    output.hasMainAnimal
-//      .drive(onNext: { animal in
-//        print("animal")
-//        self.showViewBasedOnHasMain(animal)//실제 코드
-//      })
-//      .disposed(by: disposeBag)
-//    
-//    output.hasStarCommunity
-//      .drive(onNext: { star in
-//        print("community")
-//        self.showViewBasedOnHasCommunity(star)
-//      })
-//      .disposed(by: disposeBag)
+    let input = MainViewModel.Input(
+      addAnimalButtonTapped: emptyMainAnimalView.addAnimalButton.rx.tap.asSignal(),
+      moveCommunityTapped: emptyStarCommunityView.moveCommunityTabButton.rx.tap.asSignal(),
+      moveMainAnimalDiaryTapped: moveMainAnimalDiaryTappedEvent.asSignal()
+        // button2TappedEvent.asSignal()
+    )
+    
+    let output = viewModel.transform(input: input)
+    output.hasMainAnimal
+      .drive(onNext: { animal in
+        print("animal")
+        self.showViewBasedOnHasMain(animal) // 실제 코드
+      })
+      .disposed(by: disposeBag)
+    
+    output.hasStarCommunity
+      .drive(onNext: { star in
+        print("community")
+        self.showViewBasedOnHasCommunity(star)
+      })
+      .disposed(by: disposeBag)
   }
 }
-

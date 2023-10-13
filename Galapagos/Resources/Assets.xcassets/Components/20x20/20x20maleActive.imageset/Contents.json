@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "icon_20px=남자, state=Default.png",
+      "filename" : "icon_20px=남자, state=Default.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "icon_20px=남자, state=Default@2x.png",
+      "filename" : "icon_20px=남자, state=Default@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "icon_20px=남자, state=Default@3x.png",
+      "filename" : "icon_20px=남자, state=Default@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

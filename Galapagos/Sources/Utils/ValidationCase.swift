@@ -9,33 +9,33 @@
 import Foundation
 
 enum PasswordValidate {
-    
-    case EnglishRegex
-    case NumberRegex
-    case SpecialCharRegex
-    case LengthRegex
-    
-    var validate: String {
-        switch self {
-        case .EnglishRegex:
-            return ".*[A-Za-z]+.*"
-        case .NumberRegex:
-            return ".*[0-9]+.*"
-        case .SpecialCharRegex:
-            return ".*[!@#$%^&*()_+{}:<>?]+.*"
-        case .LengthRegex:
-            return "^.{8,20}$"
-        }
-    }
+	
+	case englishRegex
+	case numberRegex
+	case specialCharRegex
+	case lengthRegex
+	
+	var validate: String {
+		switch self {
+		case .englishRegex:
+			return ".*[A-Za-z]+.*"
+		case .numberRegex:
+			return ".*[0-9]+.*"
+		case .specialCharRegex:
+			return ".*[!@#$%^&*()_+{}:<>?]+.*"
+		case .lengthRegex:
+			return "^.{8,20}$"
+		}
+	}
 }
 
 enum NicknameValidate {
-    case LengthRegex
-    
-    var validate: String {
-        switch self {
-        case .LengthRegex:
-            return "^.{2,6}$"
-        }
-    }
+	case lengthRegex
+	
+	var validate: String {
+		switch self {
+		case .lengthRegex:
+			return "^.{2,6}$"
+		}
+	}
 }

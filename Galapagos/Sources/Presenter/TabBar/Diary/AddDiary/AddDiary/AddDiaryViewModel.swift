@@ -7,9 +7,8 @@
 //
 
 import Foundation
-
-import RxSwift
 import RxCocoa
+import RxSwift
 
 class AddDiaryViewModel: ViewModelType {
   struct Input {
@@ -34,5 +33,3 @@ class AddDiaryViewModel: ViewModelType {
     return Output()
   }
 }
-
-

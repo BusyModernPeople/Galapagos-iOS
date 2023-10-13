@@ -6,10 +6,9 @@
 //  Copyright © 2023 com.busyModernPeople. All rights reserved.
 //
 
-import UIKit
-
-import RxSwift
 import RxRelay
+import RxSwift
+import UIKit
 
 final class CustomTabBarController: UITabBarController {
   
@@ -63,26 +62,28 @@ final class CustomTabBarController: UITabBarController {
     }
   }
   
-  //MARK: - Binding
-  
+  // MARK: - Binding
   private func bind() {
-  customTabBar.itemTapped //Input, 터치가 감지되면 Coordinator에 상태 변경 요청, 발행자는 View
-    .bind { [weak self] in self?
-      .coordinator?
-      .userActionState
-      .accept(
-        TabBarCoordinatorFlow(rawValue: $0) ?? .main
-      )}
+    customTabBar
+      .itemTapped // Input, 터치가 감지되면 Coordinator에 상태 변경 요청, 발행자는 View
+      .bind { [weak self] in
+        self?
+          .coordinator?
+          .userActionState
+          .accept(
+            TabBarCoordinatorFlow(rawValue: $0) ?? .main
+          )
+      }
       .disposed(by: disposeBag)
-  
-  selectedItemSubject //Output, Coordinator의 상태 변경 감지되면 UI 변경 View에게 전달, 빌헹자는 Coordinator
-    .distinctUntilChanged()
-    .subscribe(onNext: { [weak self] index in
-      guard let self = self else {return}
-      self.customTabBar
-        .changeImage(index: index)
-    })
-    .disposed(by: disposeBag)
+    
+    selectedItemSubject // Output, Coordinator의 상태 변경 감지되면 UI 변경 View에게 전달, 빌헹자는 Coordinator
+      .distinctUntilChanged()
+      .subscribe(onNext: { [weak self] index in
+        guard let self = self else {return}
+        self.customTabBar
+          .changeImage(index: index)
+      })
+      .disposed(by: disposeBag)
   }
 }
 
@@ -92,7 +93,7 @@ extension CustomTabBarController {
     self.tabBar.isHidden = true
     customTabBar.isHidden = true
   }
-    
+  
   func showCustomTabBar() {
     self.tabBar.isHidden = true
     customTabBar.isHidden = false
@@ -105,4 +106,3 @@ extension CustomTabBarController: UITabBarControllerDelegate {
     return false
   }
 }
-

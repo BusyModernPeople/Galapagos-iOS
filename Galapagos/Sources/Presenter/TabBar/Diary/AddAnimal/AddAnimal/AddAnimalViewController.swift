@@ -9,13 +9,14 @@
 
 import RxCocoa
 import RxSwift
-import SnapKit
 import SiriUIKit
+import SnapKit
 import UIKit
 
 class AddAnimalViewController: BaseViewController {
   
-  //MARK: - UI
+  // MARK: - UI
+  
   private lazy var navigationBar: GalapagosNavigationBarView = {
     let navigationBar = GalapagosNavigationBarView()
     navigationBar.setTitleText("반려동물 추가")
@@ -41,21 +42,21 @@ class AddAnimalViewController: BaseViewController {
     let radiusBoxView = RadiusBoxView(radius: 16, style: .shadow)
     radiusBoxView.layer.shadowColor = GalapagosAsset.black제목DisplayHeadingBody.color.withAlphaComponent(0.25).cgColor
     radiusBoxView.layer.shadowOffset = CGSize(width: 0, height: 4)
-    radiusBoxView.layer.shadowRadius = 4.0 //Blur
+    radiusBoxView.layer.shadowRadius = 4.0 // Blur
     radiusBoxView.layer.shadowOpacity = 1
     return radiusBoxView
   }()
   
-  private let cameraImageView = UIImageView(image:GalapagosAsset._16x16CameraDefault.image)
+  private let cameraImageView = UIImageView(image: GalapagosAsset._16x16CameraDefault.image)
   
   private let nameLabel: UILabel = AddAnimalViewTextLabel(title: "이름*")
   
   private lazy var setMainAnimalButton: UIButton = {
-      let button = UIButton()
-      button.setImage(GalapagosAsset._24x24checkRoundDefault.image, for: .normal)
-      button.setImage(GalapagosAsset._24x24checkRoundActive.image, for: .selected)
-      button.contentMode = .scaleAspectFill
-      return button
+    let button = UIButton()
+    button.setImage(GalapagosAsset._24x24checkRoundDefault.image, for: .normal)
+    button.setImage(GalapagosAsset._24x24checkRoundActive.image, for: .selected)
+    button.contentMode = .scaleAspectFill
+    return button
   }()
   
   private lazy var setMainButtonInfoLabel: UILabel = {
@@ -67,10 +68,12 @@ class AddAnimalViewController: BaseViewController {
   }()
   
   
-  //MARK: - Properties
+  // MARK: - Properties
+  
   private let viewModel: AddAnimalViewModel
   
-  //MARK: - Initializers
+  // MARK: - Initializers
+  
   init(
     viewModel: AddAnimalViewModel
   ) {
@@ -78,9 +81,9 @@ class AddAnimalViewController: BaseViewController {
     super.init()
   }
   
-  //MARK: - LifeCycle
+  // MARK: - LifeCycle
   
-  //MARK: - Methods
+  // MARK: - Methods
   
   override func setAddSubView() {
     self.view.addSubviews([
@@ -162,17 +165,17 @@ class AddAnimalViewController: BaseViewController {
   }
   
   
-  override func bind() { //대표 동물로 설정하기, 이름, 성별, 종, 입양일, 탄생일,
+  override func bind() { // 대표 동물로 설정하기, 이름, 성별, 종, 입양일, 탄생일,
     let input = AddAnimalViewModel.Input(
       backButtonTapped: navigationBar.backButton.rx.tap.asSignal(),
       profileTapped: profileContainer.rx.tapGesture()
         .when(.recognized)
         .map { [weak self] _ in
-          self?.present(CalendarViewController(events: ["2023-08-09"]), animated: false) //테스트용, 추후 달력 버튼 위치로 변경
+          self?.present(CalendarViewController(events: ["2023-08-09"]), animated: false) // 테스트용, 추후 달력 버튼 위치로 변경
         }
         .asSignal(onErrorJustReturn: ())
     )
     
-    let output = viewModel.transform(input: input)
+    _ = viewModel.transform(input: input)
   }
 }

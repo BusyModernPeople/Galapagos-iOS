@@ -7,15 +7,18 @@
 //
 
 import Foundation
-import UIKit
 import GoogleSignIn
+import UIKit
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate{
   var window: UIWindow?
   var appCoordinator: AppCoordinator?
   
-  func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+  func application(
+    _ application: UIApplication,
+    didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
+  ) -> Bool {
     self.window = UIWindow(frame: UIScreen.main.bounds)
     
     let navigationController = UINavigationController()
@@ -32,7 +35,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate{
     return true
   }
   
-  func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
+  func application(
+    _ app: UIApplication,
+    open url: URL,
+    options: [UIApplication.OpenURLOptionsKey: Any] = [:]
+  ) -> Bool {
     var handled: Bool
 
       handled = GIDSignIn.sharedInstance.handle(url)

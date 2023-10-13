@@ -6,10 +6,9 @@
 //  Copyright © 2023 com.busyModernPeople. All rights reserved.
 //
 
-import UIKit
-
 import RxRelay
 import RxSwift
+import UIKit
 
 
 final class MainCoordinator: Coordinator {
@@ -17,7 +16,10 @@ final class MainCoordinator: Coordinator {
   // MARK: - Coordinator DEPTH 2 -
   
   enum MainCoordinatorFlow {
-    case addAnimal, mainAnimalDiary, moveCommunity, detailPost //초기화면 삭제
+    case addAnimal
+    case mainAnimalDiary
+    case moveCommunity
+    case detailPost // 초기화면 삭제
   }
   
   var navigationController: UINavigationController
@@ -30,8 +32,9 @@ final class MainCoordinator: Coordinator {
   var disposeBag: DisposeBag = DisposeBag()
   var delegate: CoordinatorDelegate?
   
-  init(navigationController: UINavigationController,
-       parentsCoordinator: TabBarCoordinator
+  init(
+    navigationController: UINavigationController,
+    parentsCoordinator: TabBarCoordinator
   ) {
     self.navigationController = navigationController
     self.parentsCoordinator = parentsCoordinator
@@ -47,24 +50,26 @@ final class MainCoordinator: Coordinator {
         switch state {
         case .addAnimal:
           self.pushToAddAnimal()
-
+          
         case .mainAnimalDiary:
-          self.pushToDiary(animalIdx: "임시") //Idx 가져 올 방법 고민 (enum 유력)
+          self.pushToDiary(animalIdx: "임시") // Idx 가져 올 방법 고민 (enum 유력)
           
         case .moveCommunity:
           self.moveToCommunityTab()
         case .detailPost:
-            break
+          break
         }
       }).disposed(by: disposeBag)
   }
   
   func start() {
+    print("🔥MainCoordinator start 메서드")
     let mainViewController = MainViewController(
       viewModel: MainViewModel(
         coordinator: self
       )
     )
+    print("MainCoordinator mainViewController 생성 완료")
     self.pushViewController(viewController: mainViewController)
   }
 }
@@ -85,7 +90,7 @@ extension MainCoordinator: AddAnimalCoordinating {
 
 extension MainCoordinator: DiaryCoordinating {
   func pushToDiary(animalIdx: String) {
-    if let tabBarViewController = self.navigationController //이동 시 탭바 감춤
+    if let tabBarViewController = self.navigationController
       .tabBarController as? CustomTabBarController {
       tabBarViewController.hideCustomTabBar()
     }
@@ -99,7 +104,7 @@ extension MainCoordinator: DiaryCoordinating {
   }
 }
 
-extension MainCoordinator { //이 기능만 유일하게 Coordinator가 finsh가 아닌 사유로 부모 Coordinator 접근
+extension MainCoordinator { // 이 기능만 유일하게 Coordinator가 finsh가 아닌 사유로 부모 Coordinator 접근
   func moveToCommunityTab() {
     self.parentsCoordinator.userActionState.accept(.community)
   }
@@ -112,7 +117,7 @@ extension MainCoordinator: DetailPostCoordinating {
 }
 
 extension MainCoordinator: CoordinatorDelegate {
-  func didFinish(childCoordinator: Coordinator) { //복귀 시 탭바 재생성
+  func didFinish(childCoordinator: Coordinator) { // 복귀 시 탭바 재생성
     if let tabBarViewController = self.navigationController.tabBarController as? CustomTabBarController {
       tabBarViewController.showCustomTabBar()
     }

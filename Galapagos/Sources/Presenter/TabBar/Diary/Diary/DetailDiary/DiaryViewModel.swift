@@ -7,9 +7,8 @@
 //
 
 import Foundation
-
-import RxSwift
 import RxCocoa
+import RxSwift
 
 class DiaryViewModel: ViewModelType {
   struct Input {

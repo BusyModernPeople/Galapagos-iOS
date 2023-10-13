@@ -6,10 +6,9 @@
 //  Copyright © 2023 com.busyModernPeople. All rights reserved.
 //
 
-import UIKit
-
 import RxCocoa
 import RxSwift
+import UIKit
 
 final class MainViewModel: ViewModelType {
   struct Input {
@@ -19,7 +18,7 @@ final class MainViewModel: ViewModelType {
   }
   
   struct Output {
-    let hasMainAnimal: Driver<Bool> //값을 가지고 오기 때문에 실제 적용 시 Bool 아닌 해당 Model 정보를 가져오는 게 좋을 듯 (isEmpty로 유무 판별)
+    let hasMainAnimal: Driver<Bool> // 값을 가지고 오기 때문에 실제 적용 시 Bool 아닌 해당 Model 정보를 가져오는 게 좋을 듯 (isEmpty로 유무 판별)
     let hasStarCommunity: Driver<Bool> //
   }
   
@@ -50,7 +49,7 @@ final class MainViewModel: ViewModelType {
       .disposed(by: disposeBag)
     
     return Output(
-      hasMainAnimal: Driver.just(false), //강제 입력
+      hasMainAnimal: Driver.just(false), // 강제 입력
       hasStarCommunity: Driver.just(false)
     )
   }

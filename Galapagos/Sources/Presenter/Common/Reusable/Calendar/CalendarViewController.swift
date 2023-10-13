@@ -10,7 +10,7 @@ import UIKit
 
 final class CalendarViewController: UIViewController {
   
-  //MARK: - UI
+  // MARK: - UI
   
   private lazy var contentView = {
     let view = UIView()
@@ -18,29 +18,34 @@ final class CalendarViewController: UIViewController {
     view.backgroundColor = .white
     return view
   }()
+  
   private lazy var headerContainView = {
     let view = UIView()
     view.layoutMargins = .zero
     return view
   }()
+  
   private lazy var titleLabel = {
     let label = UILabel()
     label.text = "2000년 01월"
     label.font = GalapagosFontFamily.Pretendard.bold.font(size: 20)
     return label
   }()
+  
   private lazy var previousButton = {
     let button = UIButton()
     button.setImage(GalapagosAsset._20x20arrowLeft.image, for: .normal)
     button.addTarget(self, action: #selector(self.didPreviousButtonTouched), for: .touchUpInside)
     return button
   }()
+  
   private lazy var nextButton = {
     let button = UIButton()
     button.setImage(GalapagosAsset._20x20arrowRight.image, for: .normal)
     button.addTarget(self, action: #selector(self.didNextButtonTouched), for: .touchUpInside)
     return button
   }()
+  
   private lazy var weekStackView = {
     let stackView = UIStackView()
     stackView.distribution = .fillEqually
@@ -60,16 +65,19 @@ final class CalendarViewController: UIViewController {
   private lazy var collectionView = {
     let collectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
     collectionView.delegate = self
-    collectionView.register(CalendarCollectionViewCell.self, forCellWithReuseIdentifier: CalendarCollectionViewCell.identifier)
+    collectionView.register(
+      CalendarCollectionViewCell.self,
+      forCellWithReuseIdentifier: CalendarCollectionViewCell.identifier
+    )
     collectionView.layoutMargins = .zero
     collectionView.allowsMultipleSelection = false
     return collectionView
   }()
   
-  //MARK: - Private Properties
+  // MARK: - Private Properties
   
   private enum Section {
-      case main
+    case main
   }
   private struct Item: Hashable {
     let day: String
@@ -82,16 +90,21 @@ final class CalendarViewController: UIViewController {
     didSet {
       self.calendarDate.test()
     }
-  } //calendarDate 변경 메서드 🔥
+  } // calendarDate 변경 메서드 🔥
   private var events: [String]
-  private var cellRegistration = UICollectionView.CellRegistration<CalendarCollectionViewCell, Item> {
-    (cell, indexPath, item) in
-    cell.configure(day: item.day, hasEvent: item.hasEvent, isToday: item.isToday)
-  }
+  private var cellRegistration = UICollectionView
+    .CellRegistration<CalendarCollectionViewCell, Item> {
+      (cell, indexPath, item) in
+      cell.configure(
+        day: item.day,
+        hasEvent: item.hasEvent,
+        isToday: item.isToday
+      )
+    }
   private var initialContentOffset: CGFloat = 0
   private lazy var dataSource = makeCellDataSource()// 메서드로 따로 빼기
-
-  //MARK: - Initializers
+  
+  // MARK: - Initializers
   init(
     calendarDate: Date = Date(),
     events: [String] = []
@@ -105,7 +118,7 @@ final class CalendarViewController: UIViewController {
     fatalError("init(coder:) has not been implemented")
   }
   
-  //MARK: - LifeCycle
+  // MARK: - LifeCycle
   
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -115,10 +128,10 @@ final class CalendarViewController: UIViewController {
     self.setConstraint()
     self.setCollectionDataSource()
     self.updateCalendar(to: self.calendarDate)
-    self.adjustFlowLayoutSpacing()//수평 간격 0
+    self.adjustFlowLayoutSpacing() // 수평 간격 0
   }
   
-  //MARK: - Methods
+  // MARK: - Methods
   private func setAddSwipeGesture() {
     let swipeGesture = UIPanGestureRecognizer(target: self, action: #selector(handleSwipeGesture(_:)))
     self.contentView.addGestureRecognizer(swipeGesture)
@@ -133,45 +146,45 @@ final class CalendarViewController: UIViewController {
     headerContainView.addSubview(self.previousButton)
     headerContainView.addSubview(self.nextButton)
   }
-    
+  
   private func setConstraint() {
     self.contentView.snp.makeConstraints { make in
-        make.top.equalTo(self.view.safeAreaLayoutGuide.snp.top)
-        make.leading.equalTo(self.view.snp.leading)
-        make.trailing.equalTo(self.view.snp.trailing)
-        make.width.equalTo(self.view.snp.width)
+      make.top.equalTo(self.view.safeAreaLayoutGuide.snp.top)
+      make.leading.equalTo(self.view.snp.leading)
+      make.trailing.equalTo(self.view.snp.trailing)
+      make.width.equalTo(self.view.snp.width)
     }
-
+    
     self.headerContainView.snp.makeConstraints { make in
-        make.top.equalTo(self.contentView.snp.top)
-        make.leading.equalTo(self.view.snp.leading)
-        make.trailing.equalTo(self.view.snp.trailing)
-        make.height.equalTo(28)
+      make.top.equalTo(self.contentView.snp.top)
+      make.leading.equalTo(self.view.snp.leading)
+      make.trailing.equalTo(self.view.snp.trailing)
+      make.height.equalTo(28)
     }
-
+    
     self.titleLabel.snp.makeConstraints { make in
-        make.centerY.equalTo(self.headerContainView.snp.centerY)
-        make.centerX.equalTo(self.headerContainView.snp.centerX)
+      make.centerY.equalTo(self.headerContainView.snp.centerY)
+      make.centerX.equalTo(self.headerContainView.snp.centerX)
     }
-
+    
     self.previousButton.snp.makeConstraints { make in
-        make.centerY.equalTo(self.headerContainView.snp.centerY)
-        make.trailing.equalTo(self.titleLabel.snp.leading).offset(-14)
+      make.centerY.equalTo(self.headerContainView.snp.centerY)
+      make.trailing.equalTo(self.titleLabel.snp.leading).offset(-14)
     }
-
+    
     self.nextButton.snp.makeConstraints { make in
-        make.centerY.equalTo(self.headerContainView.snp.centerY)
-        make.leading.equalTo(self.titleLabel.snp.trailing).offset(14)
+      make.centerY.equalTo(self.headerContainView.snp.centerY)
+      make.leading.equalTo(self.titleLabel.snp.trailing).offset(14)
     }
-
+    
     self.weekStackView.snp.makeConstraints { make in
       make.top.equalTo(self.headerContainView.snp.bottom).offset(20)
       make.leading.equalTo(self.contentView.snp.leading)
       make.trailing.equalTo(self.contentView.snp.trailing)
-//      make.height.equalTo(42)
+      //      make.height.equalTo(42)
       make.height.equalTo(self.contentView.snp.width).multipliedBy(1.0 / 7.0)
     }
-
+    
     self.collectionView.snp.makeConstraints { make in
       make.top.equalTo(self.weekStackView.snp.bottom)
       make.leading.equalTo(self.weekStackView.snp.leading)
@@ -182,20 +195,21 @@ final class CalendarViewController: UIViewController {
   }
   
   private func adjustFlowLayoutSpacing() {
-      if let flowLayout = collectionView.collectionViewLayout as? UICollectionViewFlowLayout {
-          flowLayout.minimumInteritemSpacing = 0
-      }
+    if let flowLayout = collectionView.collectionViewLayout as? UICollectionViewFlowLayout {
+      flowLayout.minimumInteritemSpacing = 0
+    }
   }
   
-  //MARK: - CollectionView : DateSource
+  // MARK: - CollectionView : DateSource
   
   private func makeCellDataSource() -> UICollectionViewDiffableDataSource<Section, Item> {
     return UICollectionViewDiffableDataSource<Section, Item>(collectionView: self.collectionView) {
       (collectionView, indexPath, item) -> UICollectionViewCell? in
       return collectionView
-        .dequeueConfiguredReusableCell(using: self.cellRegistration,
-                                       for: indexPath,
-                                       item: item
+        .dequeueConfiguredReusableCell(
+          using: self.cellRegistration,
+          for: indexPath,
+          item: item
         )
     }
   }
@@ -227,13 +241,19 @@ final class CalendarViewController: UIViewController {
 }
 
 
-//MARK: - CollectionView : UICollectionViewDelegateFlowLayout
+// MARK: - CollectionView : UICollectionViewDelegateFlowLayout
 extension CalendarViewController: UICollectionViewDelegateFlowLayout {
-  func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+  func collectionView(
+    _ collectionView: UICollectionView,
+    layout collectionViewLayout: UICollectionViewLayout,
+    sizeForItemAt indexPath: IndexPath
+  ) -> CGSize {
     let availableWidth = self.view.frame.width
     let numberOfItemsPerRow: CGFloat = 7
     let spacing: CGFloat = 6 // 셀 사이의 간격
-    let itemWidth = (availableWidth - (spacing * (numberOfItemsPerRow - 1))) / numberOfItemsPerRow
+    let itemWidth = (
+      availableWidth - (spacing * (numberOfItemsPerRow - 1))
+    ) / numberOfItemsPerRow
     let itemHeight = itemWidth // 가로와 세로 길이가 같도록 설정
     return CGSize(width: itemWidth, height: itemHeight)
   }
@@ -246,31 +266,41 @@ extension CalendarViewController: UICollectionViewDelegateFlowLayout {
     return cell
   }
   
-  func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+  func collectionView(
+    _ collectionView: UICollectionView,
+    layout collectionViewLayout: UICollectionViewLayout,
+    minimumLineSpacingForSectionAt section: Int
+  ) -> CGFloat {
     return 6
   }
 }
 
 
-//MARK: - CollectionView : UICollectionViewDelegate
+// MARK: - CollectionView : UICollectionViewDelegate
 extension CalendarViewController: UICollectionViewDelegate {
   
-  func collectionView(_ collectionView: UICollectionView,
-                      shouldSelectItemAt indexPath: IndexPath) -> Bool {
-    return self.calendarDaysCell(date: self.calendarDate)[indexPath.item] != "" ? true : false //day가 없는 빈 cell은 아예 선택 불가
+  func collectionView(
+    _ collectionView: UICollectionView,
+    shouldSelectItemAt indexPath: IndexPath
+  ) -> Bool {
+    return self.calendarDaysCell(
+      date: self.calendarDate
+    )[indexPath.item] != "" ? true : false // day가 없는 빈 cell은 아예 선택 불가
   }
   
-  func collectionView(_ collectionView: UICollectionView, // 디퍼블 사용한 개선 여지 유 
-                      didSelectItemAt indexPath: IndexPath) {
+  func collectionView(
+    _ collectionView: UICollectionView,
+    didSelectItemAt indexPath: IndexPath
+  ) {
     guard let cell = collectionView.cellForItem(at: indexPath) as? CalendarCollectionViewCell
     else { return }
     guard let day = Int(cell.day) else { return }
-    self.calendarDate = self.calendarDate.setday(day) //🔥사용자에 의해 선택되었을 때 일자 변경
+    self.calendarDate = self.calendarDate.setday(day) // 🔥사용자에 의해 선택되었을 때 일자 변경
   }
 }
 
 
-//MARK: - Calendar Logic
+// MARK: - Calendar Logic
 extension CalendarViewController {
   
   private func minusMonth() {
@@ -278,8 +308,8 @@ extension CalendarViewController {
     var changeDate = calendarDate.minusMonth()
     changeDate = changeDate.setday(
       changeDate.compareYearMonth(Date.now) ? day : 1
-      )
-    self.calendarDate = changeDate //🔥변경
+    )
+    self.calendarDate = changeDate // 🔥변경
     self.updateCalendar(to: self.calendarDate)
   }
   
@@ -288,12 +318,12 @@ extension CalendarViewController {
     var changeDate = calendarDate.plusMonth()
     changeDate = changeDate.setday(
       changeDate.compareYearMonth(Date.now) ? day : 1
-      )
-    self.calendarDate = changeDate //🔥변경
+    )
+    self.calendarDate = changeDate // 🔥변경
     self.updateCalendar(to: self.calendarDate)
   }
   
-  private func updateCalendar(to date: Date) { //변경 사항 적용
+  private func updateCalendar(to date: Date) { // 변경 사항 적용
     self.updateTitle(to: date)
     self.applySnapshot(to: date)
     self.updateSelectedCell(date: date, day: date.day())
@@ -320,7 +350,7 @@ extension CalendarViewController {
     return cellDays
   }
   
-  private func checkEventDay(calendarDate: Date, day: String) -> Bool { //날짜가 어떻게 들어올 지 몰라서 대충 만들었습니당
+  private func checkEventDay(calendarDate: Date, day: String) -> Bool { // 날짜가 어떻게 들어올 지 몰라서 대충 만들었습니당
     let calendar = Calendar.current
     let currentYear = calendar.component(.year, from: calendarDate)
     let currentMonth = calendar.component(.month, from: calendarDate)
@@ -340,7 +370,7 @@ extension CalendarViewController {
 }
 
 
-//MARK: - Calendar Actions
+// MARK: - Calendar Actions
 extension CalendarViewController {
   @objc private func didPreviousButtonTouched(_ sender: UIButton) {
     self.minusMonth()
@@ -384,10 +414,15 @@ extension CalendarViewController {
 }
 
 
-extension Date { //전부 순수함수
+extension Date { // 전부 순수함수
   fileprivate func startDayOfTheWeek() -> Int {
     let startWeekday = 1 // 일요일이 시작
-    let firstDayOfMonth = Calendar.current.date(from: Calendar.current.dateComponents([.year, .month], from: Calendar.current.startOfDay(for: self)))!
+    let firstDayOfMonth = Calendar.current.date(
+      from: Calendar.current.dateComponents(
+        [.year, .month],
+        from: Calendar.current.startOfDay(for: self)
+      )
+    )!
     let weekday = Calendar.current.component(.weekday, from: firstDayOfMonth)
     let relativeWeekday = weekday - startWeekday // 주의 시작 요일을 기준으로 상대적인 요일을 계산
     
@@ -414,14 +449,14 @@ extension Date { //전부 순수함수
   
   fileprivate func setday(_ newDay: Int) -> Date {
     let calendar = Calendar.current
-    let currentYear = calendar.component(.year, from: self) //연
-    let currentMonth = calendar.component(.month, from: self) //월은 유지하고
+    let currentYear = calendar.component(.year, from: self) // 연
+    let currentMonth = calendar.component(.month, from: self) // 월은 유지하고
     
     var dateComponents = DateComponents()
     dateComponents.year = currentYear
     dateComponents.month = currentMonth
     dateComponents.day = newDay // 일자만 변경
-      
+    
     return calendar.date(from: dateComponents) ?? Date()
   } // 같은 연, 월에 날짜만 변경한 Date 반환
   
@@ -437,9 +472,9 @@ extension Date { //전부 순수함수
     return formatter.string(from: self)
   } // self의 날짜 반환
   
-  fileprivate func test() { //삭제 예정
+  fileprivate func test() { // 삭제 예정
     let formatter = DateFormatter()
     formatter.dateFormat = "yyyyMMdd"
     print(formatter.string(from: self))
-  } //date "yyyyMMdd" 형태로 print
+  } // date "yyyyMMdd" 형태로 print
 }

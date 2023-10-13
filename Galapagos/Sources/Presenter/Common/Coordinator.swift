@@ -6,12 +6,12 @@
 //  Copyright © 2023 com.busyModernPeople. All rights reserved.
 //
 
-import UIKit
-import RxSwift
 import RxCocoa
+import RxSwift
+import UIKit
 
 protocol CoordinatorDelegate: AnyObject {
-  func didFinish(childCoordinator: Coordinator)   /// navigator가 back될 때, childCoordinator들을 모두 지워주기 위함이다.
+  func didFinish(childCoordinator: Coordinator)   // navigator가 back될 때, childCoordinator들을 모두 지워주기 위함이다.
 }
 
 protocol Coordinator: AnyObject{
@@ -25,11 +25,11 @@ protocol Coordinator: AnyObject{
   func start()
   func finish()
   
-  //MARK: Navigation 동작
+  // MARK: Navigation 동작
   func pushViewController(viewController vc: UIViewController )
   func popViewController()
   
-  //MARK: Modal 동작
+  // MARK: Modal 동작
   func presentViewController(viewController vc: UIViewController )
   func dismissViewController()
   
@@ -45,7 +45,10 @@ extension Coordinator{
   
   
   func pushViewController(viewController vc: UIViewController ){
-    self.navigationController.setNavigationBarHidden(true, animated: false) /// push되는 네비바는 기본적으로 false -> 커스텀 하는걸로 하는건 어떤지
+    self.navigationController.setNavigationBarHidden(
+      true, 
+      animated: false
+    ) // push되는 네비바는 기본적으로 false -> 커스텀 하는걸로 하는건 어떤지
     self.navigationController.pushViewController(vc, animated: true)
   }
   

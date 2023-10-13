@@ -7,9 +7,8 @@
 //
 
 import Foundation
-
-import RxSwift
 import RxCocoa
+import RxSwift
 
 class AddAnimalViewModel: ViewModelType {
   struct Input {
@@ -34,7 +33,7 @@ class AddAnimalViewModel: ViewModelType {
       .disposed(by: disposeBag)
     
     input.profileTapped
-      .emit(onNext: { [weak self] _ in
+      .emit(onNext: { _ in
         print("터치 범위 확인")
       })
       .disposed(by: disposeBag)
@@ -42,4 +41,3 @@ class AddAnimalViewModel: ViewModelType {
     return Output()
   }
 }
-

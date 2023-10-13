@@ -9,24 +9,24 @@
 import KeychainSwift
 
 class UserManager {
-    static let shared = UserManager()
-    
-    var accessToken: String {
-        get {
-            return KeychainSwift().get("accessToken") ?? ""
-        }
-        set {
-            KeychainSwift().set(newValue, forKey: "accessToken")
-        }
-    }
-    var refreshToken: String {
-        get {
-            return KeychainSwift().get("refreshToken") ?? ""
-        }
-        set {
-            KeychainSwift().set(newValue, forKey: "refreshToken")
-        }
-    }
-    
-    private init() {}
+	static let shared = UserManager()
+	
+	var accessToken: String {
+		get {
+			return KeychainSwift().get("accessToken") ?? ""
+		}
+		set {
+			KeychainSwift().set(newValue, forKey: "accessToken")
+		}
+	}
+	var refreshToken: String {
+		get {
+			return KeychainSwift().get("refreshToken") ?? ""
+		}
+		set {
+			KeychainSwift().set(newValue, forKey: "refreshToken")
+		}
+	}
+	
+	private init() {}
 }

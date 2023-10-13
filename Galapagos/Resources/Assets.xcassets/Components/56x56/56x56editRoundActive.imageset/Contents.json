@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "작성.png",
+      "filename" : "작성.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "작성@2x.png",
+      "filename" : "작성@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "작성@3x.png",
+      "filename" : "작성@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

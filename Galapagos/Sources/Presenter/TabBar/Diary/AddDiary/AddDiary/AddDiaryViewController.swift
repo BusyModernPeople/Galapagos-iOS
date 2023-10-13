@@ -6,16 +6,15 @@
 //  Copyright © 2023 com.busyModernPeople. All rights reserved.
 //
 
-import UIKit
-
-import SnapKit
-import SiriUIKit
-import RxSwift
 import RxCocoa
+import RxSwift
+import SiriUIKit
+import SnapKit
+import UIKit
 
 class AddDiaryViewController: BaseViewController {
   
-  //MARK: - UI
+  // MARK: - UI
   private lazy var mockLabel: UILabel = {
     let label = UILabel()
     label.text = "AddDiary"
@@ -30,10 +29,10 @@ class AddDiaryViewController: BaseViewController {
     return navigationBar
   }()
   
-  //MARK: - Properties
+  // MARK: - Properties
   private let viewModel: AddDiaryViewModel
   
-  //MARK: - Initializers
+  // MARK: - Initializers
   init(
     viewModel: AddDiaryViewModel
   ) {
@@ -41,9 +40,9 @@ class AddDiaryViewController: BaseViewController {
     super.init()
   }
   
-  //MARK: - LifeCycle
+  // MARK: - LifeCycle
   
-  //MARK: - Methods
+  // MARK: - Methods
   
   override func setConstraint() {
     navigationBar.snp.makeConstraints{ navigationBar in
@@ -70,6 +69,6 @@ class AddDiaryViewController: BaseViewController {
       backButtonTapped: navigationBar.backButton.rx.tap.asSignal()
     )
     
-    let output = viewModel.transform(input: input)
+    _ = viewModel.transform(input: input)
   }
 }

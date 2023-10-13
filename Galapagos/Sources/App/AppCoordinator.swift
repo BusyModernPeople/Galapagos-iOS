@@ -6,24 +6,25 @@
 //  Copyright © 2023 com.busyModernPeople. All rights reserved.
 //
 
-import UIKit
-import RxSwift
 import RxCocoa
+import RxSwift
+import UIKit
 
 class AppCoordinator: Coordinator {    
 
-  //MARK: - Navigation DEPTH 0 -
+  // MARK: - Navigation DEPTH 0 -
   enum AppCoordinatorChild{
-    case Auth, TabBar
+    case auth
+    case tabBar
   }
   
-  //MARK: - Need To Initializing
+  // MARK: - Need To Initializing
   var disposeBag: DisposeBag
   var userActionState: PublishRelay<AppCoordinatorChild> = PublishRelay()
   /// init에서만 호출하고, stream을 유지하기위해 BehaviorSubject 사용
   var navigationController: UINavigationController
   
-  //MARK: - Don't Need To Initializing
+  // MARK: - Don't Need To Initializing
   var childCoordinators: [Coordinator] = []
   var delegate: CoordinatorDelegate?
   
@@ -40,20 +41,18 @@ class AppCoordinator: Coordinator {
       .subscribe(onNext: { [weak self] state in
         guard let self = self else {return}
         switch state{
-        case .Auth:
+        case .auth:
           let authCoordinator = AuthCoordinator(
             navigationController: self.navigationController
           )
           authCoordinator.delegate = self
           authCoordinator.start()
           self.childCoordinators.append(authCoordinator)
-        case .TabBar:
+        case .tabBar:
           let tabBarCoordinator = TabBarCoordinator(
             navigationController: self.navigationController
           )
-          //tabBarCoordinator.delegate = self//삭제
           tabBarCoordinator.start()
-          //self.childCoordinators.append(tabBarCoordinator) //삭제
         }
       }).disposed(by: disposeBag)
   }

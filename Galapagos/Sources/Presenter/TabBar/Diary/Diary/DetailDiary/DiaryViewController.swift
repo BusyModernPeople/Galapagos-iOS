@@ -6,16 +6,15 @@
 //  Copyright © 2023 com.busyModernPeople. All rights reserved.
 //
 
-import UIKit
-
-import SnapKit
-import SiriUIKit
-import RxSwift
 import RxCocoa
+import RxSwift
+import SiriUIKit
+import SnapKit
+import UIKit
 
 class DiaryViewController: BaseViewController {
   
-  //MARK: - UI
+  // MARK: - UI
   private lazy var mockLabel: UILabel = {
     let label = UILabel()
     label.text = "DiaryView"
@@ -35,10 +34,10 @@ class DiaryViewController: BaseViewController {
     return navigationBar
   }()
   
-  //MARK: - Properties
+  // MARK: - Properties
   private let viewModel: DiaryViewModel
   
-  //MARK: - Initializers
+  // MARK: - Initializers
   init(
     viewModel: DiaryViewModel
   ) {
@@ -46,9 +45,9 @@ class DiaryViewController: BaseViewController {
     super.init()
   }
   
-  //MARK: - LifeCycle
+  // MARK: - LifeCycle
   
-  //MARK: - Methods
+  // MARK: - Methods
   
   override func setConstraint() {
     navigationBar.snp.makeConstraints{ navigationBar in
@@ -63,10 +62,10 @@ class DiaryViewController: BaseViewController {
     }
     
     button.snp.makeConstraints { button in
-    button.trailing.equalToSuperview().inset(16)
-    button.bottom.equalToSuperview().inset(16)
-    button.width.equalTo(50)
-    button.height.equalTo(50)
+      button.trailing.equalToSuperview().inset(16)
+      button.bottom.equalToSuperview().inset(16)
+      button.width.equalTo(50)
+      button.height.equalTo(50)
     }
   }
   
@@ -84,7 +83,6 @@ class DiaryViewController: BaseViewController {
       buttonTapped: button.rx.tap.asSignal()
     )
     
-    let output = viewModel.transform(input: input)
+    _ = viewModel.transform(input: input)
   }
 }
-

@@ -34,41 +34,50 @@ class EmptyMainAnimalView: BaseView {
     paragraphStyle.alignment = .center
 
     let attributedString = NSMutableAttributedString(string: text)
-    attributedString.addAttribute(.paragraphStyle, value: paragraphStyle, range: NSRange(location: 0, length: text.count))
+    attributedString.addAttribute(
+      .paragraphStyle,
+      value: paragraphStyle,
+      range: NSRange(location: 0, length: text.count)
+    )
     
-    let blackAttributes: [NSAttributedString.Key: Any] = [.foregroundColor: GalapagosAsset.black제목DisplayHeadingBody.color]
+    let blackAttributes: [NSAttributedString.Key: Any] = [
+      .foregroundColor: GalapagosAsset.black제목DisplayHeadingBody.color
+    ]
     let greenAttributes: [NSAttributedString.Key: Any] = [.foregroundColor: GalapagosAsset.green.color]
     let greenRange = (text as NSString).range(of: "동물을 추가하고 대표 동물을 설정")
-    attributedString.addAttributes(blackAttributes, range: NSRange(location: 0, length: text.count))
+    
+    attributedString.addAttributes(
+      blackAttributes,
+      range: NSRange(location: 0, length: text.count)
+    )
     attributedString.addAttributes(greenAttributes, range: greenRange)
     label.attributedText = attributedString
     label.font = GalapagosFontFamily.Pretendard.semiBold.font(size: 14)
     return label
   }()
   
-//  var addAnimalButton: GalapagosButton = {
-//    let button = GalapagosButton(buttonStyle: .fill, isCircle: true)
-//    //이미지 추가 시 라벨과 이미지 사이 간격 필요, 그러나 UIEdgeInsets는 15.0부터 deprecated 되는 기능
-//    //따라서 UIButton.Configuration.plain() 으로 image padding 설정해 주려 하였으나,
-//    //폰트, 라벨 색상, 버튼 이미지에 달하는 전체적인 코드를 변경 코드를 다 수정해 주어야 해서 사용 X
-//    let spacing: CGFloat = 8
-//    let horizental: CGFloat = 20
-//    button.setTitle("동물 추가하기", for: .normal)
-//    button.setImage(GalapagosAsset._16x16plusDefault.image, for: .normal)
-//    button.titleLabel?.adjustsFontSizeToFitWidth = true
-//    button.titleEdgeInsets = UIEdgeInsets(top: 0, left: spacing/2, bottom: 0, right: 0)
-//    button.imageEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: spacing/2)
-//    button.contentEdgeInsets = UIEdgeInsets(top: 0, left: horizental, bottom: 0, right: horizental)
-//    
-//    return button
-//  }()
+  var addAnimalButton: UIButton = {
+    let button = UIButton()
+    let horizental: CGFloat = 20
+    var config = UIButton.Configuration.tinted()
+    config.imagePadding = 8
+    button.configuration = config
+    button.setTitle("동물 추가하기", for: .normal)
+    button.setImage(
+      GalapagosAsset._16x16plusDefault.image, 
+      for: .normal
+    )
+    button.configuration?.imagePlacement = .leading
+      return button
+  }()
   
   override func setAddSubView() {
     self.addSubview(shadowView)
     
-//    shadowView.addSubview(animalStackView)
-//    [addAnimalInfoLabel, addAnimalButton].forEach { subview in
-//      animalStackView.addArrangedSubview(subview) }
+    shadowView.addSubview(animalStackView)
+    [addAnimalInfoLabel, addAnimalButton].forEach { subview in
+      animalStackView.addArrangedSubview(subview)
+    }
   }
   
   override func setConstraint() {
@@ -85,9 +94,10 @@ class EmptyMainAnimalView: BaseView {
       make.width.lessThanOrEqualToSuperview()
     }
     
-//    addAnimalButton.snp.makeConstraints { make in
-//      make.centerX.equalToSuperview()
-//      make.height.equalTo(52)
-//    }
+    addAnimalButton.snp.makeConstraints { make in
+      make.centerX.equalToSuperview()
+      make.height.equalTo(52)
+      
+    }
   }
 }

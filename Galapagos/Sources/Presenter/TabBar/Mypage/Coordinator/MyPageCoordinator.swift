@@ -6,30 +6,30 @@
 //  Copyright © 2023 com.busyModernPeople. All rights reserved.
 //
 
-import UIKit
-import RxSwift
 import RxRelay
+import RxSwift
+import UIKit
 
 class MyPageCoordinator: Coordinator {
-    var disposeBag: DisposeBag
+  var disposeBag: DisposeBag
+  
+  var navigationController: UINavigationController
+  
+  var childCoordinators: [Coordinator] = []
+  var delegate: CoordinatorDelegate?
+  
+  init(navigationController: UINavigationController) {
+    self.navigationController = navigationController
+    self.disposeBag = DisposeBag()
+  }
+  
+  func setState() {
     
-    var navigationController: UINavigationController
+  }
+  
+  func start() {
     
-    var childCoordinators: [Coordinator] = []
-    var delegate: CoordinatorDelegate?
-    
-    init(navigationController: UINavigationController) {
-        self.navigationController = navigationController
-        self.disposeBag = DisposeBag()
-    }
-    
-    func setState() {
-        
-    }
-    
-    func start() {
-        
-    }
-    
-    
+  }
+  
+  
 }

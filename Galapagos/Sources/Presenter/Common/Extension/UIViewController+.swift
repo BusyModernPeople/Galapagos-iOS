@@ -11,7 +11,7 @@ import UIKit
 extension UIViewController {
   
   var navigationBarToContentsOffset: CGFloat {
-    return 16 //비율로 변경 예정
+    return 16 // 비율로 변경 예정
   }
   
   var contentsToContentsOffset: CGFloat {
@@ -19,7 +19,7 @@ extension UIViewController {
   }
   
   var galpagosHorizontalOffset: CGFloat {
-    return UIScreen.main.bounds.width / 16.25 //좌우 간격
+    return UIScreen.main.bounds.width / 16.25 // 좌우 간격
   }
   
   // MARK: 빈 화면을 눌렀을 때 키보드가 내려가도록 처리
@@ -34,10 +34,15 @@ extension UIViewController {
   }
   
   // MARK: 취소와 확인이 뜨는 UIAlertController
-  func presentAlert(title: String, message: String? = nil,
-                    isCancelActionIncluded: Bool = false,
-                    preferredStyle style: UIAlertController.Style = .alert,
-                    handler: ((UIAlertAction) -> Void)? = nil, _ compliton : @escaping()->()) {
+  func presentAlert(
+    title: String,
+    message: String? = nil,
+    isCancelActionIncluded: Bool = false,
+    preferredStyle style: UIAlertController.Style = .alert,
+    handler: (
+      (UIAlertAction) -> Void)? = nil,
+    _ compliton: @escaping () -> Void
+  ) {
     self.dismissIndicator()
     let alert = UIAlertController(title: title, message: message, preferredStyle: style)
     let actionDone = UIAlertAction(title: "확인", style: .default, handler: handler)
@@ -52,10 +57,13 @@ extension UIViewController {
   }
   
   // MARK: 커스텀 UIAction이 뜨는 UIAlertController
-  func presentAlert(title: String, message: String? = nil,
-                    isCancelActionIncluded: Bool = false,
-                    preferredStyle style: UIAlertController.Style = .alert,
-                    with actions: UIAlertAction ...) {
+  func presentAlert(
+    title: String,
+    message: String? = nil,
+    isCancelActionIncluded: Bool = false,
+    preferredStyle style: UIAlertController.Style = .alert,
+    with actions: UIAlertAction ...
+  ) {
     self.dismissIndicator()
     let alert = UIAlertController(title: title, message: message, preferredStyle: style)
     actions.forEach { alert.addAction($0) }
@@ -99,7 +107,9 @@ extension UIViewController {
     alertLabel.translatesAutoresizingMaskIntoConstraints = false
     
     self.view.addSubview(alertSuperview)
-    alertSuperview.bottomAnchor.constraint(equalTo: target ?? view.safeAreaLayoutGuide.bottomAnchor, constant: -12).isActive = true
+    alertSuperview.bottomAnchor.constraint(
+      equalTo: target ?? view.safeAreaLayoutGuide.bottomAnchor,
+      constant: -12).isActive = true
     alertSuperview.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
     alertSuperview.addSubview(alertLabel)
     alertLabel.topAnchor.constraint(equalTo: alertSuperview.topAnchor, constant: 6).isActive = true
@@ -123,22 +133,41 @@ extension UIViewController {
   
   
   // MARK: 토스트 메세지
-  func showToastMessage(message : String = "default Message", font: UIFont = UIFont.systemFont(ofSize: 12, weight: .semibold), withDuration: TimeInterval = 2) {
-    let toastLabel = UILabel(frame: CGRect(x: self.view.frame.size.width/2 - 75, y: self.view.frame.size.height-100, width: 150, height: 35))
+  func showToastMessage(
+    message: String = "default Message",
+    font: UIFont = UIFont.systemFont(
+      ofSize: 12,
+      weight: .semibold
+    ),
+    withDuration: TimeInterval = 2
+  ) {
+    let toastLabel = UILabel(
+      frame: CGRect(
+      x: self.view.frame.size.width/2 - 75,
+      y: self.view.frame.size.height-100,
+      width: 150,
+      height: 35
+      )
+    )
     toastLabel.backgroundColor = UIColor.black.withAlphaComponent(0.6)
     toastLabel.textColor = UIColor.white
     toastLabel.font = font
-    toastLabel.textAlignment = .center;
+    toastLabel.textAlignment = .center
     toastLabel.text = message
     toastLabel.alpha = 1.0
-    toastLabel.layer.cornerRadius = 10;
+    toastLabel.layer.cornerRadius = 10
     toastLabel.clipsToBounds  =  true
     self.view.addSubview(toastLabel)
-    UIView.animate(withDuration: withDuration, delay: 0.1, options: .curveEaseInOut, animations: {
-      toastLabel.alpha = 0.0
-    }, completion: {(isCompleted) in
-      toastLabel.removeFromSuperview()
-    })
+    UIView.animate(
+      withDuration: withDuration,
+      delay: 0.1,
+      options: .curveEaseInOut,
+      animations: {
+        toastLabel.alpha = 0.0
+      }, completion: { isCompleted in
+        toastLabel.removeFromSuperview()
+      }
+    )
   }
   
   // MARK: 인디케이터 표시

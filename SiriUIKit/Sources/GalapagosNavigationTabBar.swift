@@ -65,24 +65,24 @@ public final class GalapagosNavigationTabBarView: UIView {
   
   // MARK: - LifeCycle
   override init(frame: CGRect) {
-      super.init(frame: frame)
-      
-      self.backgroundColor = SiriUIKitAsset.white기본화이트.color
-      setAddSubView()
-      setConstraint()
-  }
+    super.init(frame: frame)
     
+    self.backgroundColor = SiriUIKitAsset.white기본화이트.color
+    setAddSubView()
+    setConstraint()
+  }
+  
   required init?(coder: NSCoder) {
-      fatalError("init(coder:) has not been implemented")
+    fatalError("init(coder:) has not been implemented")
   }
-    
+  
   // MARK: - Methods
   func setAddSubView() {
     self.addSubview(rightItemStack)
   }
   
   func setConstraint() {
-
+    
     self.rightItemStack.snp.makeConstraints{ horizontalStack in
       horizontalStack.centerY.equalToSuperview()
       horizontalStack.trailing.equalToSuperview().offset(-24)
@@ -103,7 +103,7 @@ public final class GalapagosNavigationTabBarView: UIView {
   }
   
   private func setMainLogo() {
-    self.setLeftTitleText("Logo") //후에 이미지로 교체 및 "" 변경
+    self.setLeftTitleText("Logo") // 후에 이미지로 교체 및 "" 변경
     self.addRightButton(self.alertButton)
   }
   
@@ -148,4 +148,3 @@ public final class GalapagosNavigationTabBarView: UIView {
     }
   }
 }
-

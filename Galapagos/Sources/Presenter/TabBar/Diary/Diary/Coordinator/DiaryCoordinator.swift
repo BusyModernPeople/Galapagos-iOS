@@ -6,15 +6,14 @@
 //  Copyright © 2023 com.busyModernPeople. All rights reserved.
 //
 
-import UIKit
-
-import RxSwift
 import RxRelay
+import RxSwift
+import UIKit
 
 class DiaryCoordinator: Coordinator {
 
   enum DiaryCoordinatorFlow {
-    case addDiary //초기화면 삭제
+    case addDiary // 초기화면 삭제
   }
   
   private var animalIdx: String?
@@ -46,7 +45,7 @@ class DiaryCoordinator: Coordinator {
   }
 
   func start() {
-    guard let animalIdx else { return } //아직 안 사용
+//    guard let animalIdx else { return } // 아직 안 사용
     let diaryViewController = DiaryViewController(
       viewModel: DiaryViewModel(
         coordinator: self

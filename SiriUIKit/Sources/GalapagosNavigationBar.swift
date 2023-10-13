@@ -6,8 +6,8 @@
 //  Copyright © 2023 com.busyModernPeople. All rights reserved.
 //
 
-import UIKit
 import SnapKit
+import UIKit
 
 public final class GalapagosNavigationBarView: UIView {
   

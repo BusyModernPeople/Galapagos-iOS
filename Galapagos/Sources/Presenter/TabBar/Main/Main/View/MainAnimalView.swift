@@ -25,13 +25,29 @@ class MainAnimalView: BaseView {
     let label = UILabel()
     let text = "\(name)와 함께한지"
     let attributedString = NSMutableAttributedString(string: text)
-    let blackAttributes: [NSAttributedString.Key: Any] = [.foregroundColor: GalapagosAsset.black제목DisplayHeadingBody.color]
-    attributedString.addAttributes(blackAttributes, range: NSRange(location: 0, length: text.count))
+    let blackAttributes: [
+      NSAttributedString.Key: Any
+    ] = [
+      .foregroundColor:
+        GalapagosAsset.black제목DisplayHeadingBody.color
+    ]
+    attributedString.addAttributes(
+      blackAttributes,
+      range: NSRange(
+        location: 0,
+        length: text.count
+      )
+    )
     let greenAttributes: [NSAttributedString.Key: Any] = [.foregroundColor: GalapagosAsset.green.color]
     let greenRange = (text as NSString).range(of: name)
-    attributedString.addAttributes(greenAttributes, range: greenRange)
+    attributedString.addAttributes(
+      greenAttributes,
+      range: greenRange
+    )
     label.attributedText = attributedString
-    label.font = GalapagosFontFamily.Pretendard.semiBold.font(size: 22)
+    label.font = GalapagosFontFamily.Pretendard
+      .semiBold
+      .font(size: 22)
     return label
   }()
   
@@ -44,9 +60,19 @@ class MainAnimalView: BaseView {
   private lazy var dayLabel: UILabel = {
     let label = UILabel()
     let text = "일째"
-    let attributedString = NSMutableAttributedString(string: text)
-    let blackAttributes: [NSAttributedString.Key: Any] = [.foregroundColor: GalapagosAsset.black제목DisplayHeadingBody.color]
-    attributedString.addAttributes(blackAttributes, range: NSRange(location: 0, length: text.count))
+    let attributedString = NSMutableAttributedString(
+      string: text
+    )
+    let blackAttributes: [NSAttributedString.Key: Any] = [
+      .foregroundColor: GalapagosAsset.black제목DisplayHeadingBody.color
+    ]
+    attributedString.addAttributes(
+      blackAttributes,
+      range: NSRange(
+        location: 0,
+        length: text.count
+      )
+    )
     label.attributedText = attributedString
     
     label.font = GalapagosFontFamily.Pretendard.bold.font(size: 18)
@@ -71,7 +97,10 @@ class MainAnimalView: BaseView {
   lazy var mainAnimalDiaryButton: UIButton = {
     let button = UIButton()
     button.isUserInteractionEnabled = true
-    button.setImage(GalapagosAsset._56x56diaryRoundActive.image, for: .normal)
+    button.setImage(
+      GalapagosAsset._56x56diaryRoundActive.image,
+      for: .normal
+    )
     return button
   }()
   
@@ -79,29 +108,44 @@ class MainAnimalView: BaseView {
     self.name = name
     self.days = days
     super.init(frame: .zero)
-    let url = URL(string: "https://i.ibb.co/4RLyK4J/1684243476793-2.png")!//테스트 코드 (추후 삭제)
-    self.mainAnimalImage.load(url: url)//테스트 코드 (추후 삭제)
+    self.mainAnimalImage.image = #imageLiteral(resourceName: "AnimalSample") // 임시 주입, 실제로는 url
   }
   
   override func setAddSubView() {
-    self.addSubviews([mainAnimalInfoContainerView, mainAnimalImage, mainAnimalDiaryButton])
+    self.addSubviews(
+      [
+        mainAnimalInfoContainerView,
+        mainAnimalImage,
+        mainAnimalDiaryButton
+      ]
+    )
     
-    [nameLabel, daysContainerView].forEach { subview in
-      mainAnimalInfoContainerView.addSubview(subview)
-    }
+    [nameLabel, daysContainerView]
+      .forEach { subview in
+        mainAnimalInfoContainerView.addSubview(subview)
+      }
     
-    [numberStackView, dayLabel].forEach { subview in
-      daysContainerView.addSubview(subview)
-    }
+    [ numberStackView, dayLabel ]
+      .forEach { subview in
+        daysContainerView.addSubview(subview)
+      }
     
-    createNumberBoxIntoNumberStackView(numberStackView: numberStackView, days: self.days)
+    createNumberBoxIntoNumberStackView(
+      numberStackView: numberStackView,
+      days: self.days
+    )
   }
   
-  func createNumberBoxIntoNumberStackView(numberStackView: UIStackView, days: String) {
-    days.map{ String($0) }.forEach { str in
-      let view = radiusNumberView(number: str)
-      numberStackView.addArrangedSubview(view)
-    }
+  func createNumberBoxIntoNumberStackView(
+    numberStackView: UIStackView,
+    days: String
+  ) {
+    days
+      .map{ String($0) }
+      .forEach { str in
+        let view = RadiusNumberView(number: str)
+        numberStackView.addArrangedSubview(view)
+      }
   }
   
   override func setConstraint() {
@@ -148,15 +192,20 @@ class MainAnimalView: BaseView {
 }
 
 
-final class radiusNumberView: BaseView {
+final class RadiusNumberView: BaseView {
   private let number: String
   
   private let shadowView = RadiusBoxView(radius: 5, style: .shadow)
   private lazy var numberLabel: UILabel = {
     let label = UILabel()
     let text = number
-    let attributedString = NSMutableAttributedString(string: text)
-    let blackAttributes: [NSAttributedString.Key: Any] = [.foregroundColor: GalapagosAsset.black제목DisplayHeadingBody.color]
+    let attributedString = NSMutableAttributedString(
+      string: text
+    )
+    let blackAttributes: [
+      NSAttributedString.Key: Any] = [
+        .foregroundColor: GalapagosAsset.black제목DisplayHeadingBody.color
+      ]
     attributedString.addAttributes(blackAttributes, range: NSRange(location: 0, length: text.count))
     label.attributedText = attributedString
     
@@ -188,17 +237,17 @@ final class radiusNumberView: BaseView {
 }
 
 // MARK: - URL 이미지 로드 Test 위한 임시 코드 (아직 이미지 처리 방식 고려 X)
-//test용 임시, 이미지 처리는 아직 고민 사항
-extension UIImageView {
-    func load(url: URL) {
-        DispatchQueue.global().async { [weak self] in
-            if let data = try? Data(contentsOf: url) {
-                if let image = UIImage(data: data) {
-                    DispatchQueue.main.async {
-                        self?.image = image
-                    }
-                }
-            }
+// test용 임시, 이미지 처리는 아직 고민 사항
+private extension UIImageView {
+  func load(url: URL) {
+    DispatchQueue.global().async { [weak self] in
+      if let data = try? Data(contentsOf: url) {
+        if let image = UIImage(data: data) {
+          DispatchQueue.main.async {
+            self?.image = image
+          }
         }
+      }
     }
+  }
 }

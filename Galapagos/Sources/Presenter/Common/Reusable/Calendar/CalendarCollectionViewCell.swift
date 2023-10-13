@@ -11,7 +11,7 @@ import UIKit
 
 final class CalendarCollectionViewCell: UICollectionViewCell {
   
-  //MARK: - UI
+  // MARK: - UI
   private var isCurrentDay: Bool = false
   private var myDate: Date?
   private lazy var eventDot: UIView = {
@@ -28,11 +28,11 @@ final class CalendarCollectionViewCell: UICollectionViewCell {
     return label
   }()
     
-  //MARK: - Properties
+  // MARK: - Properties
   static let identifier = "CalendarCollectionViewCell"
   var day: String = "" // 디퍼블로 개선 후 private 변경 
   
-  //MARK: - Initializers
+  // MARK: - Initializers
   required init?(coder: NSCoder) {
     super.init(coder: coder)
     self.configure()
@@ -43,7 +43,7 @@ final class CalendarCollectionViewCell: UICollectionViewCell {
     self.configure()
   }
   
-  //MARK: - LifeCycle
+  // MARK: - LifeCycle
   override func layoutSubviews() {
     super.layoutSubviews()
     self.contentView.layer.cornerRadius = bounds.width / 2
@@ -51,7 +51,7 @@ final class CalendarCollectionViewCell: UICollectionViewCell {
     self.eventDot.clipsToBounds = true
   }
   
-  //MARK: - Methods
+  // MARK: - Methods
   private func configure() {
     self.contentView.addSubview(self.dayLabel)
     self.contentView.addSubview(eventDot)
