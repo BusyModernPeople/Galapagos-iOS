@@ -71,6 +71,10 @@ class AppCoordinator: Coordinator {
 extension AppCoordinator: CoordinatorDelegate{
   func didFinish(childCoordinator: Coordinator) {
     self.navigationController.popViewController(animated: true)
-    self.finish()
+		if childCoordinator is AuthCoordinator {
+			self.userActionState.accept(.tabBar)
+		} else {
+			self.userActionState.accept(.auth)
+		}
   }
 }
