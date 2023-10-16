@@ -121,7 +121,6 @@ public final class GalapagosProgressPager: UIView {
 	
 	public func nextPage() {
 		currentPage.accept(currentPage.value + 1)
-		print("넥스트 페이지: \(currentPage.value)")
 	}
 	
 	public func previousPage() {

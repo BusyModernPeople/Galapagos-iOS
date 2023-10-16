@@ -25,6 +25,7 @@ class EmailSignUpViewModel: ViewModelType{
 	
 	struct Output {
 		let readyForNextButton: Observable<Bool>
+		let nextButtonHidden: Observable<Bool>
 	}
 	
 	// MARK: - Properties
@@ -35,6 +36,7 @@ class EmailSignUpViewModel: ViewModelType{
 	
 	let didTapBackButton = PublishSubject<Void>()
 	let readyForNextButton = BehaviorRelay<Bool>(value: false)
+	let nextButtonHidden = BehaviorSubject<Bool>(value: false)
 	let letsGoSignUp = BehaviorRelay<Bool>(value: false)
 	
 	var email = BehaviorRelay<String>(value: "")
@@ -74,6 +76,13 @@ class EmailSignUpViewModel: ViewModelType{
 			})
 			.disposed(by: disposeBag)
 		
+		input.nowPage
+			.withUnretained(self)
+			.subscribe(onNext: { owner, page in
+				owner.nextButtonHidden.onNext(page >= 3)
+			})
+			.disposed(by: disposeBag)
+		
 		let signupBody = Observable
 			.combineLatest(email, password, nickname, socialType)
 			.map{ UserSignUpBody(email: $0, password: $1, nickName: $2, socialType: $3) }
@@ -91,17 +100,20 @@ class EmailSignUpViewModel: ViewModelType{
 			.flatMapLatest { [unowned self] body in
 				return self.userSignUpUsecase.userSignUp(body: body)
 					.catch { error in
+						print("🍎 발생한 에라: \(error) 🍎")
 						return .error(error)
 					}
 			}
 			.subscribe(onNext: { model in
 				UserDefaults.standard.setValue(model.jwt, forKey: "JWT")
 				UserDefaults.standard.setValue(model.nickName, forKey: "NICKNAME")
+				print("🍎 발급받은 JWT: \(model.jwt) 🍎")
 			})
 			.disposed(by: disposeBag)
 		
 		return Output(
-			readyForNextButton: readyForNextButton.asObservable()
+			readyForNextButton: readyForNextButton.asObservable(),
+			nextButtonHidden: nextButtonHidden.asObservable()
 		)
 	}
 }

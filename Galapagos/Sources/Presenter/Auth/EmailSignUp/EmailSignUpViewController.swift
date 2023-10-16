@@ -157,6 +157,15 @@ class EmailSignUpViewController: BaseViewController {
 			})
 			.disposed(by: disposeBag)
 		
+		output.nextButtonHidden
+			.debug()
+			.asObservable()
+			.withUnretained(self)
+			.subscribe(onNext: { owner, isHidden in
+				owner.nextButton.isHidden = isHidden
+			})
+			.disposed(by: disposeBag)
+		
 		output.readyForNextButton
 			.asObservable()
 			.withUnretained(self)

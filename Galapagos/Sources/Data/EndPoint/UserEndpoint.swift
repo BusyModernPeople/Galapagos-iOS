@@ -26,7 +26,7 @@ enum UserEndpoint: Endpoint {
 	var path: String {
 		switch self {
 		case .signUp:
-			return "/send-code/signup"
+			return "/signup"
 		}
 		
 	}
