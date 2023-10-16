@@ -136,8 +136,21 @@ final class CompleteSignUpView: UIView {
 			lookAroundBtnTapped: lookAroundAppButton.rx.tap.asObservable()
 		)
 		
-		_ = viewModel.transform(input: input)
+		let output = viewModel.transform(input: input)
 		
+		output.lookAroundTap
+			.withUnretained(self)
+			.subscribe(onNext: { owner, _ in
+				owner.parentViewModel.coordinator?.finish()
+			})
+			.disposed(by: disposeBag)
+		
+		output.registerTap
+			.withUnretained(self)
+			.subscribe(onNext: { owner, _ in
+				owner.parentViewModel.coordinator?.finish()
+			})
+			.disposed(by: disposeBag)
 	}
 	
 }

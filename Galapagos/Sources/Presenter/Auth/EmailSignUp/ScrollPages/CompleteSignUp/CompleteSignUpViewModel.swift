@@ -20,7 +20,8 @@ final class CompleteSignUpViewModel: ViewModelType {
 	}
 	
 	struct Output {
-		
+		let registerTap: Observable<Void>
+		let lookAroundTap: Observable<Void>
 	}
 	
 	var disposeBag: DisposeBag = DisposeBag()
@@ -28,7 +29,8 @@ final class CompleteSignUpViewModel: ViewModelType {
 	func transform(input: Input) -> Output {
 		
 		return Output(
-			
+			registerTap: input.registerAnimalBtnTapped,
+			lookAroundTap: input.lookAroundBtnTapped
 		)
 	}
 }
