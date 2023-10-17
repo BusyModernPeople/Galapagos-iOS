@@ -113,7 +113,7 @@ public final class GalapagosNavigationTabBarView: UIView {
   
   private func setCommunityLogo() {
     self.setLeftTitleText("커뮤니티")
-    self.addRightButton(self.searchButton)
+//    self.addRightButton(self.searchButton) -> 피그마 보니까 없어진 것 같아요
     self.addRightButton(self.alertButton)
   }
   

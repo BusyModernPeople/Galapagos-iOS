@@ -89,7 +89,7 @@ private extension TabBarCoordinator {
       diaryCoordinator.start()
       childCoordinators.append(diaryCoordinator)
     case .community:
-      let communityCoordinator = CommunityListCoordinator(navigationController: navigationController)
+      let communityCoordinator = CommunityCoordinator(navigationController: navigationController)
       communityCoordinator.delegate = self
       communityCoordinator.start()
       childCoordinators.append(communityCoordinator)
