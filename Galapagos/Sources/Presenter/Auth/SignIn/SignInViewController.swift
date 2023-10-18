@@ -18,20 +18,20 @@ import UIKit
 class SignInViewController: BaseViewController {
 	
 	// MARK: - UI
-	private lazy var titleLabel: UILabel = {
-		let label = UILabel()
-		label.text = "갈파 텍스트 로고"
-		label.textColor = GalapagosAsset.green.color
-		label.font = GalapagosFontFamily.Pretendard.bold.font(size: 28)
-		return label
-	}()
 	
 	private lazy var logoImageView: UIImageView = {
 		let imageView = UIImageView()
 		imageView.contentMode = .scaleAspectFit
-		imageView.backgroundColor = GalapagosAsset.gray3DisableButtonBg.color
+		imageView.image = GalapagosAsset.galapagosLogo.image
 		imageView.clipsToBounds = true
 		imageView.cornerRadius = 12
+		return imageView
+	}()
+	
+	private lazy var logoTitleImageView: UIImageView = {
+		let imageView = UIImageView()
+		imageView.contentMode = .scaleAspectFit
+		imageView.image = GalapagosAsset.galapagosLogoTitle.image
 		return imageView
 	}()
 	
@@ -158,20 +158,22 @@ class SignInViewController: BaseViewController {
 	
 	// MARK: - Methods
 	override func setConstraint() {
-		titleLabel.snp.makeConstraints{ titleLable in
-			titleLable.centerX.equalToSuperview()
-			titleLable.centerY.equalToSuperview().multipliedBy(0.4)
-		}
-		
 		logoImageView.snp.makeConstraints { logoImageView in
 			logoImageView.centerX.equalToSuperview()
-			logoImageView.top.equalTo(titleLabel.snp.bottom).multipliedBy(1.2)
-			logoImageView.height.width.equalTo(185)
+			logoImageView.top.equalToSuperview().offset(180)
+			logoImageView.height.width.equalTo(110)
+		}
+		
+		logoTitleImageView.snp.makeConstraints { logoTitleImageView in
+			logoTitleImageView.centerX.equalToSuperview()
+			logoTitleImageView.top.equalTo(logoImageView.snp.bottom).offset(24)
+			logoTitleImageView.height.equalTo(30)
+			logoTitleImageView.width.equalTo(150)
 		}
 		
 		galapagosInfoLable.snp.makeConstraints{ infoLabel in
 			infoLabel.centerX.equalToSuperview()
-			infoLabel.top.equalTo(logoImageView.snp.bottom).multipliedBy(1.1)
+			infoLabel.top.equalTo(logoTitleImageView.snp.bottom).offset(50)
 		}
 		
 		kakaoSignInButton.snp.makeConstraints { kakaoButton in
@@ -206,10 +208,11 @@ class SignInViewController: BaseViewController {
 				.offset(20)
 		}
 	}
+	
 	override func setAddSubView() {
 		self.view.addSubviews([
-			titleLabel,
 			logoImageView,
+			logoTitleImageView,
 			galapagosInfoLable,
 			socialLoginStackView,
 			emailLoginStackView
@@ -226,8 +229,6 @@ class SignInViewController: BaseViewController {
 	}
 	
 	override func bind() {
-		
-		
 		let emailSignUpBtnTapped = emailSignUpLabel.rx.tapGesture().when(.recognized).map{_ in }.asObservable()
 		let emailSignInBtnTapped = emailSignInLabel.rx.tapGesture().when(.recognized).map{_ in }.asObservable()
 		let googleSignInBtnTapped = googleSignInButton.rx.tap
