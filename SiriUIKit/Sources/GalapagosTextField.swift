@@ -62,8 +62,8 @@ public final class GalapagosTextField: UIView{
 	private var placeHolder: String
 	private var maxCount: Int
 	
-	private var keyboardType: UIKeyboardType = .emailAddress
-	private var clearMode: Bool = false
+	private var keyboardType: UIKeyboardType
+	private var clearMode: Bool
 	
 	public var rxType = BehaviorRelay<TextFieldType>(value: .def)
 	public var text: String? {
@@ -97,10 +97,14 @@ public final class GalapagosTextField: UIView{
 	// MARK: - Initializers
 	public init(
 		placeHolder: String,
-		maxCount: Int
+		maxCount: Int,
+		keyboardType: UIKeyboardType = .emailAddress,
+		clearMode: Bool = false
 	) {
 		self.placeHolder = placeHolder
 		self.maxCount = maxCount
+		self.keyboardType = keyboardType
+		self.clearMode = clearMode
 		
 		super.init(frame: .zero)
 		
