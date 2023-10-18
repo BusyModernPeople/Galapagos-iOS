@@ -110,11 +110,11 @@ extension MainCoordinator { // 이 기능만 유일하게 Coordinator가 finsh�
   }
 }
 
-extension MainCoordinator: DetailPostCoordinating {
-  func pushToDetailPost(postIdx: String) {
-    //
-  }
-}
+//extension MainCoordinator: DetailPostCoordinating {
+//  func pushToDetailPost(postIdx: String) {
+//    //
+//  }
+//}
 
 extension MainCoordinator: CoordinatorDelegate {
   func didFinish(childCoordinator: Coordinator) { // 복귀 시 탭바 재생성
