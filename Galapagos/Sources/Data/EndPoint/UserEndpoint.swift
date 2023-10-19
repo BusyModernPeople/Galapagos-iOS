@@ -10,6 +10,7 @@ import Foundation
 
 enum UserEndpoint: Endpoint {
 	case signUp(body: UserSignUpBody)
+	case emailSignIn(body: UserEmailSignInBody)
 	
 	var baseURL: URL? {
 		return URL(string: "http://3.34.8.109:3040/users")
@@ -17,7 +18,7 @@ enum UserEndpoint: Endpoint {
 	
 	var method: HTTPMethod {
 		switch self {
-		case .signUp:
+		case .signUp, .emailSignIn:
 			return .POST
 			
 		}
@@ -27,6 +28,8 @@ enum UserEndpoint: Endpoint {
 		switch self {
 		case .signUp:
 			return "/signup"
+		case .emailSignIn:
+			return "/email-login"
 		}
 		
 	}
@@ -34,6 +37,8 @@ enum UserEndpoint: Endpoint {
 	var parameters: HTTPRequestParameterType? {
 		switch self {
 		case .signUp(let body):
+			return .body(body)
+		case .emailSignIn(let body):
 			return .body(body)
 		}
 	}

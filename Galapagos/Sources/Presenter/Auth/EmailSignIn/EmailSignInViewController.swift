@@ -158,6 +158,27 @@ class EmailSignInViewController: BaseViewController {
 		}
 	}
 	
+	override func bind() {
+		let input = EmailSignInViewModel.Input(
+			email: emailTextField.rx.text.orEmpty.asObservable(),
+			password: passwordTextField.rx.text.orEmpty.asObservable(),
+			backBtnTapped: navigationBar.backButton.rx.tap.asObservable(),
+			resettingPasswordBtnTapped: resettingPasswordLabel.rx.tapGesture().when(.recognized).map{_ in }.asObservable(),
+			signInBtnTapped: signInButton.rx.tap.asObservable()
+		)
+		
+		let output = viewModel.transform(input: input)
+		
+		output.signInBtnEnable
+			.withUnretained(self)
+			.subscribe(onNext: { owner, enable in
+				enable == true
+				? owner.signInButton.rxType.accept(.usage(.inactive))
+				: owner.signInButton.rxType.accept(.usage(.disabled))
+			})
+			.disposed(by: disposeBag)
+		
+	}
 	
 }
 

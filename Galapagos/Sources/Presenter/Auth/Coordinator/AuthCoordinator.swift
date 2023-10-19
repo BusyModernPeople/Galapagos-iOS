@@ -71,10 +71,12 @@ class AuthCoordinator: Coordinator {
           }
         case .emailSignIn:
           let emailSignInViewController = EmailSignInViewController(
-            viewModel: EmailSignInViewModel(
-              /// 여기에 나중에는 useCase도 추가 되어야겠지
-              coordinator: self
-            )
+						viewModel: EmailSignInViewModel(
+							coordinator: self,
+							userEmailSignInUsecase: DefaultUserEmailSignInUsecase(
+								userRepository: DefaultUserRepository()
+							)
+						)
           )
           if self.navigationController.viewControllers.contains(where: {$0 is EmailSignInViewController}) {
             self.navigationController.popViewController(animated: true)

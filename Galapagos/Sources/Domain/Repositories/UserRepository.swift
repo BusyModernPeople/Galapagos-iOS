@@ -11,4 +11,5 @@ import RxSwift
 
 protocol UserRepository {
 	func userSignUp(body: UserSignUpBody) -> Single<Data>
+	func userEmailSignIn(body: UserEmailSignInBody) -> Single<Data>
 }

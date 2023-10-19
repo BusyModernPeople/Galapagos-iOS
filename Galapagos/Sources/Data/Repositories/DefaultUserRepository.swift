@@ -23,4 +23,9 @@ final class DefaultUserRepository: UserRepository {
 		return networkService.request(endpoint)
 	}
 	
+	func userEmailSignIn(body: UserEmailSignInBody) -> Single<Data> {
+		let endpoint = UserEndpoint.emailSignIn(body: body)
+		return networkService.request(endpoint)
+	}
+	
 }
