@@ -10,6 +10,12 @@ import RxRelay
 import RxSwift
 import UIKit
 
+protocol CommunityCoordinatorProtocol {
+	func pushToFree()
+	func pushToQnA()
+	func pushToNotification()
+}
+
 class CommunityCoordinator: Coordinator {
   
   // MARK: - Coordinator DEPTH 2 -
@@ -36,7 +42,19 @@ class CommunityCoordinator: Coordinator {
   }
   
   func setState() {
-    //
+		self.userActionState
+			.withUnretained(self)
+			.subscribe(onNext: { owner, state in
+				print("💗💗💗 CommunityCoordinator: \(state) 💗💗💗")
+				switch state {
+				case .free:
+					owner.pushToFree()
+				case .qna:
+					owner.pushToQnA()
+				case .notification:
+					owner.pushToNotification()
+				}
+			}).disposed(by: disposeBag)
   }
   
   func start() {
@@ -50,8 +68,52 @@ class CommunityCoordinator: Coordinator {
 	}
 }
 
+// MARK: - Community's Push
+extension CommunityCoordinator: CommunityCoordinatorProtocol {
+	func pushToFree() {
+		if let tabBarViewController = self.navigationController
+			.tabBarController as? CustomTabBarController {
+			tabBarViewController.hideCustomTabBar()
+		}
+		let communityFreeCoordinator = CommunityFreeCoordinator(
+			navigationController: self.navigationController
+		)
+		communityFreeCoordinator.delegate = self
+		communityFreeCoordinator.start()
+		self.childCoordinators.append(communityFreeCoordinator)
+	}
+	
+	func pushToQnA() {
+		if let tabBarViewController = self.navigationController
+			.tabBarController as? CustomTabBarController {
+			tabBarViewController.hideCustomTabBar()
+		}
+		let communityQnACoordinator = CommunityQnACoordinator(
+			navigationController: self.navigationController
+		)
+		communityQnACoordinator.delegate = self
+		communityQnACoordinator.start()
+		self.childCoordinators.append(communityQnACoordinator)
+	}
+	
+	func pushToNotification() {
+		if let tabBarViewController = self.navigationController
+			.tabBarController as? CustomTabBarController {
+			tabBarViewController.hideCustomTabBar()
+		}
+		let communityNotificationCoordinator = CommunityNotificationCoordinator(
+			navigationController: self.navigationController
+		)
+		communityNotificationCoordinator.delegate = self
+		communityNotificationCoordinator.start()
+		self.childCoordinators.append(communityNotificationCoordinator)
+	}
+	
+	
+}
+
 extension CommunityCoordinator: CoordinatorDelegate {
-	func didFinish(childCoordinator: Coordinator) { // 복귀 시 탭바 재생성
+	func didFinish(childCoordinator: Coordinator) {
 		if let tabBarViewController = self.navigationController.tabBarController as? CustomTabBarController {
 			tabBarViewController.showCustomTabBar()
 		}
