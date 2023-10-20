@@ -112,18 +112,19 @@ extension UIView {
 }
 
 
-//MARK: - 아래는 테스트 코드입니다. (사용 예시)
-/// `SceneDelegate.swift`의 `scene(_ scene:willConnectTo:options:)`에 아래 코드 사용해서 테스트 가능
+// MARK: - 아래는 테스트 코드입니다. (사용 예시)
+// `SceneDelegate.swift`의 `scene(_ scene:willConnectTo:options:)`에 아래 코드 사용해서 테스트 가능
+
 /*
  let test = AlertTestViewController()
  
  window?.rootViewController = test
  window?.makeKeyAndVisible()
- */
+*/
 
-/// 아래의 `AlertTestViewController`를 활성화 하여 사용
+// `AlertTestViewController`를 활성화 하여 사용
+
 /*
- 
  import RxCocoa
  import RxSwift
 
@@ -179,4 +180,4 @@ extension UIView {
 	 }
  }
 
- */
+*/

@@ -30,13 +30,13 @@ final class DefaultNetworkService: NetworkService {
 	
 	func request(_ endpoint: Endpoint) -> Single<Data> {
 		return self.request(endpoint)
+			.do(onSubscribe: {
+				GalapagosIndecatorManager.shared.show()
+			}, onDispose: {
+				GalapagosIndecatorManager.shared.hide()
+			})
 			.flatMap { response, data -> Observable<Data> in
 				if response.statusCode == 200 {
-					//                    if let model = Utility.decode(T.self, from: data) {
-					//                        return .just(model)
-					//                    } else {
-					//                        return .error(NetworkError.decodingFailed)
-					//                    }
 					return .just(data)
 				} else {
 					let errorData = Utility.decodeError(from: data)

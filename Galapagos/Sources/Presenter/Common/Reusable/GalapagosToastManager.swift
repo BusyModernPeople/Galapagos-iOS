@@ -1,5 +1,5 @@
 //
-//  ToastManager.swift
+//  GalapagosToastManager.swift
 //  Galapagos
 //
 //  Created by Siri on 2023/10/20.
@@ -10,10 +10,10 @@ import SnapKit
 
 import UIKit
 
-final class ToastManager {
+final class GalapagosToastManager {
 	
 	// MARK: - Properties
-	static let shared = ToastManager()
+	static let shared = GalapagosToastManager()
 	
 	// MARK: - Initializers
 	private init() {
