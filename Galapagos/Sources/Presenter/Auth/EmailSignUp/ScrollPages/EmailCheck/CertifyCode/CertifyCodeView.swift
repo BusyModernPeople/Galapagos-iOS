@@ -162,8 +162,11 @@ final class CertifyCodeView: BaseView {
 		
 		
 		output.resendEmailMessage
+			.observe(on: MainScheduler.instance)
 			.subscribe(onNext: { message in
-				print("✨ 다시 보내기 결과는?: \(message) ✨")
+				GalapagosToastManager.shared.addToast(message: "인증코드가 이메일로 전송되었습니다.")
+			}, onError: { error in
+				GalapagosToastManager.shared.addToast(message: error.localizedDescription )
 			})
 			.disposed(by: disposeBag)
 	}

@@ -14,10 +14,16 @@ final class GalapagosToastManager {
 	
 	// MARK: - Properties
 	static let shared = GalapagosToastManager()
+	private var currentToastView: ToastView?
 	
 	// MARK: - Initializers
 	private init() {
-		
+		NotificationCenter.default.addObserver(
+			self,
+			selector: #selector(keyboardWillShow(_:)),
+			name: UIResponder.keyboardWillShowNotification,
+			object: nil
+		)
 	}
 	
 	// MARK: - Functions
@@ -26,27 +32,55 @@ final class GalapagosToastManager {
 	}
 	
 	private func showToast(message: String) {
-		guard let sceneDelegate = UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate else { return }
+		let scenes = UIApplication.shared.connectedScenes
+		let windowScene = scenes.first as? UIWindowScene
+		guard let window = windowScene?.windows.first else { return }
 		
-		if let window = sceneDelegate.window {
-			let toastView = ToastView(frame: window.bounds, message: message)
-			
-			window.addSubview(toastView)
-			
-			toastView.snp.makeConstraints { make in
-				make.centerX.equalTo(window.snp.centerX)
-				make.width.equalTo(260)
-				make.bottom.equalTo(window.snp.bottom).offset(-122)
-			}
-			
-			UIView.animate(withDuration: 0.5, delay: 1.5, options: .curveEaseInOut, animations: {
-				toastView.alpha = 0
-			}, completion: { isCompleted in
-				toastView.removeFromSuperview()
-			})
+		let toastView = ToastView(frame: window.bounds, message: message)
+		window.addSubview(toastView)
+		currentToastView = toastView
+		
+		setupToastConstraints(toastView, in: window)
+		
+		UIView.animate(withDuration: 0.5, delay: 1.5, options: .curveEaseInOut, animations: {
+			self.currentToastView?.alpha = 0
+		}, completion: { _ in
+			self.currentToastView?.removeFromSuperview()
+			self.currentToastView = nil
+		})
+	}
+	
+	private func setupToastConstraints(_ toastView: ToastView, in window: UIWindow) {
+		toastView.snp.makeConstraints { make in
+			make.centerX.equalTo(window.snp.centerX)
+			make.width.equalTo(284)
+			make.bottom.equalTo(window.snp.bottom).offset(-122)
 		}
 	}
 	
+	@objc private func keyboardWillShow(_ notification: Notification) {
+		if let keyboardFrame = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect {
+			adjustToastForKeyboard(show: true, keyboardFrame: keyboardFrame)
+		}
+	}
+	
+	
+	private func adjustToastForKeyboard(show: Bool, keyboardFrame: CGRect) {
+		guard let toastView = currentToastView else { return }
+		
+		var newOffset = -122
+		if show {
+			newOffset -= Int(keyboardFrame.height)
+		}
+		
+		toastView.snp.updateConstraints { make in
+			make.bottom.equalToSuperview().offset(newOffset)
+		}
+		
+		UIView.animate(withDuration: 0.25) {
+			toastView.superview?.layoutIfNeeded()
+		}
+	}
 }
 
 
@@ -82,10 +116,10 @@ private class ToastView: UIView {
 	
 	private func setupConstraints() {
 		toastLabel.snp.makeConstraints { make in
-			make.top.equalTo(self.snp.top).offset(14)
-			make.bottom.equalTo(self.snp.bottom).offset(-14)
-			make.leading.equalTo(self.snp.leading).offset(40)
-			make.trailing.equalTo(self.snp.trailing).offset(-40)
+			make.top.equalToSuperview().offset(14)
+			make.bottom.equalToSuperview().offset(-14)
+			make.leading.equalToSuperview().offset(40)
+			make.trailing.equalToSuperview().offset(-40)
 		}
 	}
 	

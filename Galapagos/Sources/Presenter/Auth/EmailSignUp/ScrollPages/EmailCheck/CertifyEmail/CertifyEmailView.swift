@@ -116,10 +116,10 @@ final class CertifyEmailView: BaseView {
 			.subscribe(onNext: { owner, message in
 				owner.certifyEmailButton.rxType.accept(.usage(.disabled))
 				owner.emailTextField.rxType.accept(.disabled)
-				
 				owner.parentViewModel.certifyCodeIsHidden.accept(false)
+				GalapagosToastManager.shared.addToast(message: "인증코드가 이메일로 전송되었습니다.")
 			}, onError: { error in
-				print("😀 인증코드 보내기 실패: \(error.localizedDescription)😀")
+				GalapagosToastManager.shared.addToast(message: error.localizedDescription )
 			})
 			.disposed(by: disposeBag)
 		
